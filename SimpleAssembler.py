@@ -1,8 +1,8 @@
 from params import *
-from errors import *
+#from errors import *
 
 lineCount = 0  # Counting number of lines entered till now
-lines = []
+lines = [] #List where commads readd from file are stored
 variables = []
 labels = {}
 instrn_count = 0
