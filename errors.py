@@ -46,7 +46,7 @@ def immediateValidity(imm: str):
     imm = list(imm)
     if imm[0] == "$":
         imm = "".join(imm[1:])
-        if imm.isdigit() and (int(imm) in range(0, 256)):
+        if imm.isdigit() and (int(imm) in range(0, 128)):
             return True
         else:
             print("Imm more than 7 bits: " + imm)
