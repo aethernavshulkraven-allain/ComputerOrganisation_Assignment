@@ -9,7 +9,7 @@ instrn_count = 0
 
 # typeA and typeB function done by Arnav Shukla
 
-def make_7_bit(num):
+def make_7bit_binary(num):
     con_num = []
     while num >= 1:
         rem = num % 2
@@ -31,7 +31,7 @@ def typeA(cmd):#the same list given to "assembleOut" is given here
     strout += r1 + r2 + r3
     return strout
 
-def typeB(cmd)#the same list given to "assembleOut" is given here
+def typeB(cmd):#the same list given to "assembleOut" is given here
     strout = ""
     strout += opcode[cmd[0]][0]
     strout += "0"
