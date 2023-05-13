@@ -8,6 +8,7 @@ labels = {}
 instrn_count = 0
 
 #To Be Edited - Modify this comment for the one that are done
+#Params - Done
 
 def printbin(lst):
     code = lst[0]
