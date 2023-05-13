@@ -49,7 +49,7 @@ def immediateValidity(imm: str):
         if imm.isdigit() and (int(imm) in range(0, 256)):
             return True
         else:
-            print("Imm more than 8 bits: " + imm)
+            print("Imm more than 7 bits: " + imm)
             return False
     return False
 
@@ -107,7 +107,7 @@ def isLineValid(line: str):
             else:
                 return False
         if "FLAGS" in line:
-            print("Illegal use of FLAGS register. Command: " + line.join())
+            print("Illegal use of FLAGS register. Command: " + line.join()) 
             return False
         if opcode[cmd][1] == "A":
             if regValidity(line[1]) and regValidity(line[2]) and regValidity(line[3]):
