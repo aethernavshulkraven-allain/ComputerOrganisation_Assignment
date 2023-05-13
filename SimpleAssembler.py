@@ -8,6 +8,19 @@ labels = {}
 instrn_count = 0
 
 # typeA and typeB function done by Arnav Shukla
+
+def make_7_bit(num):
+    con_num = []
+    while num >= 1:
+        rem = num % 2
+        con_num.append(str(int(rem)))
+        num = num // 2
+    con_num = con_num[::-1]
+    bin = "".join(con_num)
+    if len(bin) < 7:
+        bin = "0" * (7 - len(bin)) + bin
+    return bin
+
 def typeA(cmd):#the same list given to "assembleOut" is given here
     strout = ""
     strout += opcode[cmd[0]][0]
