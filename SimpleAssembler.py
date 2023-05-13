@@ -7,7 +7,9 @@ variables = []
 labels = {}
 instrn_count = 0
 
-# typeA and typeB function done by Arnav Shukla
+#Things To Be Edited - Modify post this comment for the ones that are done/assigned
+#Params - Done by aarya
+#typeA and typeB function done by Arnav Shukla
 
 def make_7bit_binary(num):
     con_num = []
@@ -41,6 +43,3 @@ def typeB(cmd):#the same list given to "assembleOut" is given here
     immbin = make_7bit_binary(int(imm))
     strout += immbin
     return strout
-#Things To Be Edited - Modify post this comment for the ones that are done/assigned
-#Params - Done by aarya
-#Type AB - Pending @aarya commit karde 
