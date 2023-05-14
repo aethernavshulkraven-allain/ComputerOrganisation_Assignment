@@ -4,6 +4,7 @@ from errors import *
 lineCount = 0  # Counting number of lines entered till now
 lines = [] #List where commads readd from file are stored
 variables = []
+commands = []
 labels = {}
 instrn_count = 0
 
@@ -50,7 +51,6 @@ def splitter():
                 continue
             
     #checking for validity of other commands
-    commands = []
     for cmd in lines[len(variables) :]:
         if ":" in cmd: #cmd me colon kyu hai?
             cmd1 = cmd.split(":")[1].strip()
@@ -118,6 +118,8 @@ def typeA(cmd): #the same list given to "assembleOut" is given here
     strout += r1 + r2 + r3
     return strout
 
+#IMP - Move wala case alag se deal in B & C
+
 def typeB(cmd): #the same list given to "assembleOut" is given here
     strout = ""
     strout += opcode[cmd[0]][0]
@@ -127,6 +129,43 @@ def typeB(cmd): #the same list given to "assembleOut" is given here
     imm = cmd[2][1:]#as 0 is $
     immbin = make_7bit_binary(int(imm))
     strout += immbin
+    return strout
+
+def typeC(cmd): #the same list given to "assembleOut" is given here
+    strout = ""
+    strout += opcode[cmd[0]][0]
+    strout += "00000"
+    r1 = registersF[cmd[1]]
+    strout += r1
+    r2 = registersF[cmd[2]]
+    strout += r2
+    return strout
+
+def typeD(cmd): #the same list given to "assembleOut" is given here
+    strout = ""
+    if cmd[-1] in variables:
+            for i in range(len(variables)):
+                if variables[i] == cmd[-1]:
+                    ind = i + len(commands) - 1 #yeh smajh aaya kisi ko?
+                    break
+            mem_addr = instrn_count + (ind + 1)
+            bin_mem_addr = make_7bit_binary(mem_addr)
+            strout = opcode[cmd[0]][0] + "0" + registersF[cmd[1]] + bin_mem_addr
+    else:
+        pass  # handle no variable declared error here?
+    return strout
+
+def typeE(cmd): #the same list given to "assembleOut" is given here
+    bin_mem_addr = labels[cmd[1]]
+    strout = ""
+    strout += opcode[cmd[0]][0]
+    strout += "0000"
+    strout += bin_mem_addr
+    return strout
+
+def typeF(cmd): #the same list given to "assembleOut" is given here
+    strout = ""
+    strout = opcode[cmd[0]][0] + "00000000000"
     return strout
 
 def assembleOut(cmd):
