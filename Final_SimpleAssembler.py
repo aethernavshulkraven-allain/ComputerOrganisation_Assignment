@@ -50,7 +50,7 @@ registersF = {
 }
 
 def isValidCmd(line: str):
-    cmd = line.split()[0]
+    cmd = (line.strip()).split()[0]
     if cmd in opcode.keys():
         return True
     if cmd == "var":
@@ -211,8 +211,8 @@ def isLineValid(line: str):
 
 f=open("input_file.txt","r")
 cmd_list = f.readlines()
-cmd_list = [line.strip() for line in cmd_list]
-cmd_list = [line for line in cmd_list if line != ""]
+org_cmd_list = [line.strip() for line in cmd_list]
+cmd_list = [line for line in org_cmd_list if line != ""]
 f.close()
 #print(cmd_list) #Extra
 
@@ -230,12 +230,12 @@ def splitter():
         if line[0] == "var":
             if len(line) == 2:
                 if flagVarOver: 
-                    print(f"Error: Variables found after the beginning")
+                    print(f"Error in line {i+1}: Variables found after the beginning")
                     exit()
                 else:
                     var = line[1]
                     if duplicateVar(var,variables):
-                        print(f"Error: Duplicate variable name: {var}")
+                        print(f"Error in line {i+1}: Duplicate variable name: {var}")
                         exit()
                     else:
                         if varNameValidity(var):
@@ -260,20 +260,21 @@ def splitter():
     for cmd in cmd_list[len(variables):]:
         if ":" in cmd: 
             cmd1 = cmd.split(":")[1].strip()
+            print(cmd1)
             if isValidCmd(cmd1):
                 if isLineValid(cmd1): 
                     commands.append(cmd1)
                 else:
-                    print(f"General Syntax Error on line {lineCount+1}: {cmd}")
+                    print(f"General Syntax Error on line {org_cmd_list.index(cmd)}: {cmd}")
                     exit()
             else:
-                print(f"General Syntax Error on line {lineCount+1}: {cmd}")
+                print(f"General Syntax Error on line {org_cmd_list.index(cmd)}: {cmd}")
                 exit()
         elif isValidCmd(cmd):
             if isLineValid(cmd): 
                 commands.append(cmd)
             else:
-                print(f"General Syntax Error on line {lineCount+1}: {cmd}")
+                print(f"General Syntax Error on line {org_cmd_list.index(cmd)}: {cmd}")
                 exit()
         else:
             print("Error: Invalid Command on line " + str(lineCount + 1) + ": " + cmd)
@@ -282,7 +283,7 @@ def splitter():
     for cmd in cmd_list[len(variables) :]:
         if (cmd[0] == "ld") or (cmd[0] == "st"):
             if cmd[-1] not in variables:
-                print("Error: Invalid Command: Variable Does NOT Exist " + str(lineCount + 1) + ": " + cmd)
+                print("Error: Invalid Command: Variable Does NOT Exist " + str({cmd_list.index(cmd)}) + ": " + cmd)
                 exit()
     
     #print(variables) #EXTRA

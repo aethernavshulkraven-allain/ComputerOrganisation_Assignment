@@ -1,9 +1,9 @@
-var var1
-var var2
-var var3
-ld R1 var1
-ld R2 var2
-st R3 var3
-jmp hlt_label
-add R1 R2 R3
-hlt_label: hlt
+mov R0 $50
+mov R1 $2
+mul R1 R0 R2
+label: 
+l1: add R1 R2 R3
+cmp R2 R3
+je label
+jgt l1
+hlt
