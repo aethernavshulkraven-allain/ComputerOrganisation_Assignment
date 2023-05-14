@@ -7,9 +7,6 @@ variables = []
 labels = {}
 instrn_count = 0
 
-#Things To Be Edited - Modify post this comment for the ones that are done/assigned
-#Params - Done by aarya
-#typeA, typeB, make_7bit_binary, assembleout functions done by Arnav Shukla
 def splitter():
     f=open("input_file.txt")
     cmd_list=f.readlines()
@@ -96,10 +93,6 @@ def splitter():
         #     printbin(cc.split())
         # exit()
 
-        
-        
-    
-    
 def make_7bit_binary(num):
     con_num = []
     while num >= 1:
@@ -112,7 +105,7 @@ def make_7bit_binary(num):
         bin = "0" * (7 - len(bin)) + bin
     return bin
 
-def typeA(cmd):#the same list given to "assembleOut" is given here
+def typeA(cmd): #the same list given to "assembleOut" is given here
     strout = ""
     strout += opcode[cmd[0]][0]
     strout += "00"
@@ -122,7 +115,7 @@ def typeA(cmd):#the same list given to "assembleOut" is given here
     strout += r1 + r2 + r3
     return strout
 
-def typeB(cmd):#the same list given to "assembleOut" is given here
+def typeB(cmd): #the same list given to "assembleOut" is given here
     strout = ""
     strout += opcode[cmd[0]][0]
     strout += "0"
