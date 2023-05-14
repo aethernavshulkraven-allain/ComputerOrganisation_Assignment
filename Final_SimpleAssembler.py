@@ -4,7 +4,7 @@ cmd_list = [] #List where commads readd from file are stored
 variables = []
 commands = []
 labels = {}
-instrn_count = 0
+instrn_count = 0 
 
 opcode = {
     "add": ("00000", "A"),
@@ -212,8 +212,9 @@ def isLineValid(line: str):
 f=open("input_file.txt","r")
 cmd_list = f.readlines()
 cmd_list = [line.strip() for line in cmd_list]
+cmd_list = [line for line in cmd_list if line != ""]
 f.close()
-print(cmd_list) #Extra
+#print(cmd_list) #Extra
 
 def splitter():
     parentstr = ""
@@ -248,16 +249,16 @@ def splitter():
         else:
             flagVarOver = 1 #1 = True
         #checking for label validity        
-        if line[0][-1] == ":": #IMP - Label Main Code Me Handle?
+        if line[0][-1] == ":": 
             if not labelValidity(line[0][:-1]):
                 exit()
             else:
-                labels[line[0][:-1]] = i - len(variables) #Yeh kya hai?
+                labels[line[0][:-1]] = i - len(variables) 
                 continue
             
     #checking for validity of other commands
     for cmd in cmd_list[len(variables):]:
-        if ":" in cmd: #Check this alag se!
+        if ":" in cmd: 
             cmd1 = cmd.split(":")[1].strip()
             if isValidCmd(cmd1):
                 if isLineValid(cmd1): 
@@ -269,7 +270,7 @@ def splitter():
                 print(f"General Syntax Error on line {lineCount+1}: {cmd}")
                 exit()
         elif isValidCmd(cmd):
-            if isLineValid(cmd): #IMP, check this functions in errors.py
+            if isLineValid(cmd): 
                 commands.append(cmd)
             else:
                 print(f"General Syntax Error on line {lineCount+1}: {cmd}")
@@ -284,9 +285,9 @@ def splitter():
                 print("Error: Invalid Command: Variable Does NOT Exist " + str(lineCount + 1) + ": " + cmd)
                 exit()
     
-    print(variables) #EXTRA
-    print(commands)
-    print(labels)
+    #print(variables) #EXTRA
+    #print(commands)
+    #print(labels)
 
     hltCount = 0
     #checking for halt commands
@@ -294,7 +295,7 @@ def splitter():
         if c == "hlt":
             hltCount += 1
 
-    print(hltCount) #EXTRA
+    #print(hltCount) #EXTRA
 
     if hltCount > 1:
         print("Error: More than one hlt instruction found")
@@ -311,10 +312,9 @@ def splitter():
     #Calling main function        
     for i in range(len(variables),len(cmd_list)):
         line=cmd_list[i].split()
-        print(assembleOut(line))
-        #parentstr += assembleOut(line) 
-        #parentstr += "\n"       
-    #print("ALL Gud - ",parentstr) #EXTRA
+        parentstr += assembleOut(line) 
+        parentstr += "\n"
+    #print(parentstr)          
     return parentstr
 
 def make_7bit_binary(num):
@@ -367,6 +367,7 @@ def typeC(cmd): #the same list given to "assembleOut" is given here
     return strout
 
 def typeD(cmd): #the same list given to "assembleOut" is given here
+    ind = 0
     strout = ""
     if cmd[-1] in variables:
             for i in range(len(variables)):
@@ -381,6 +382,7 @@ def typeD(cmd): #the same list given to "assembleOut" is given here
     return strout
 
 def typeE(cmd): #the same list given to "assembleOut" is given here
+    ind = 0
     if cmd[-1] in variables:
         for i in range(len(variables)):
             if variables[i] == cmd[-1]:
@@ -394,10 +396,6 @@ def typeE(cmd): #the same list given to "assembleOut" is given here
     strout += bin_mem_addr
     return strout
 
-def typeF(cmd): #the same list given to "assembleOut" is given here
-    strout = ""
-    strout = opcode[cmd[0]][0] + "00000000000"
-    return strout
 
 def assembleOut(cmd):
     #if encountered type is A
@@ -421,7 +419,7 @@ def assembleOut(cmd):
     if (cmd[0] in typeE_ins): return typeE(cmd)
 
     #if encountered type is F
-    typeF_ins = ["hlt"]
-    if (cmd[0] in typeF_ins): return typeF(cmd)
+    else: 
+        return "1101000000000000"
 
-splitter()
+print(splitter()) 
