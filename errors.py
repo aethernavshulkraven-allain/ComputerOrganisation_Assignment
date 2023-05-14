@@ -19,19 +19,31 @@ def duplicateVar(varName: str, variables: list):
 
 
 def duplicateLabel(labelName: str):
-    pass
+    for label in labels.keys():
+        if label == labelName:
+            return True
 
 
 def labelValidity(labelName: str):
     if duplicateLabel(labelName):
-        return False
-    # add other conditions here
+        print("Error: Duplicate label name: " + labelName)
+        exit()
+    elif duplicateVar(labelName):
+        print("Error: Label name is same as variable name: " + labelName)
+        exit()
+    else:
+        return True
 
 
 def varNameValidity(varName: str):
     if duplicateVar(varName):
+        print("Error: Duplicate Variable Name")
         return False
     if varName.isdigit():
+        print("Error:Varibale name cant be all digits ")
+        return False
+    if duplicateLabel(varName):
+        print("Error: Variable name is same as label name: " + varName)
         return False
     return True
 
@@ -49,13 +61,13 @@ def immediateValidity(imm: str):
         if imm.isdigit() and (int(imm) in range(0, 128)):
             return True
         else:
-            print("Imm more than 7 bits: " + imm)
+            print("Error: Imm more than 7 bits: " + imm)
             return False
     return False
 
 
 def lenChecker(line: str):
-    if isValidCmd(line):
+    if isValidCmd(line) or line[-1] == ":":
         line = line.split()
         cmd = line[0]
         if cmd == "mov" and immediateValidity(line[2]):
@@ -74,6 +86,11 @@ def lenChecker(line: str):
             return True
         elif opcode[cmd][1] == "F" and len(line) == 1:
             return True
+        elif line[-1] == ":":
+            if line[:-1].isalnum():
+                return True
+            else:
+                print("Label isn't alphanumeric")
     return False
 
 
@@ -82,12 +99,20 @@ def isValidMemAddr(line: str):
     jumpCommands = ["jmp", "jlt", "jgt", "je"]
     loadStore = ["ld", "st"]
     if cmd in jumpCommands:
-        if labelValidity(line[2]):
+        if line.split()[1] in labels.keys():
             return True
-    if cmd in loadStore:
-        if line[2] in variables:
+        else:
+            print("Label not found: " + line.split()[1])
+            exit()
+    elif cmd in loadStore:
+        if line.split()[2] in variables:
             return True
+        else:
+            print("Variable not found: " + line.split()[2])
+            exit()
+
     return False
+
 
 
 def isLineValid(line: str):
@@ -100,15 +125,18 @@ def isLineValid(line: str):
                     return True
                 elif regValidity(line[2]):
                     return True
-                elif line[2] == "FLAGS":
-                    return True
                 else:
                     return False
+            elif line[1] == "FLAGS" and regValidity(line[2]):
+                return True
+            elif line[2] == "FLAGS":
+                print("Illegal use of FLAGS register. Command: " + " ".join(line))
+                exit()
             else:
                 return False
         if "FLAGS" in line:
-            print("Illegal use of FLAGS register. Command: " + line.join()) 
-            return False
+            print("Illegal use of FLAGS register. Command: " + " ".join(line))
+            exit()
         if opcode[cmd][1] == "A":
             if regValidity(line[1]) and regValidity(line[2]) and regValidity(line[3]):
                 return True
@@ -118,15 +146,21 @@ def isLineValid(line: str):
         elif opcode[cmd][1] == "C":
             if regValidity(line[1]) and regValidity(line[2]):
                 return True
-        elif opcode[cmd][1] == "D" or opcode[cmd][1] == "E":
-            if regValidity(line[1]) and isValidMemAddr(line[2]):
+        elif opcode[cmd][1] == "D":
+            if regValidity(line[1]) and isValidMemAddr(" ".join(line)):
+                return True
+        elif opcode[cmd][1] == "E":
+            if isValidMemAddr(" ".join(line)):
                 return True
         elif opcode[cmd][1] == "F":
             if len(line) == 1:
                 return True
+        elif line[-1] == ":":
+            return True
         else:
             return False
-
+    else:
+        return False
 
 # sample input to test the above functions
 
