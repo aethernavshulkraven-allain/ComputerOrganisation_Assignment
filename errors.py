@@ -39,7 +39,7 @@ def varNameValidity(varName: str):
     if duplicateVar(varName):
         print("Error: Duplicate Variable Name")
         return False
-    if varName.isdigit():
+    if varName.isdigit(): #ReCheck - Not in assignment to check this!
         print("Error:Varibale name cant be all digits ")
         return False
     if duplicateLabel(varName):

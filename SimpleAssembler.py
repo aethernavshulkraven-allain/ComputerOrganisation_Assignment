@@ -10,16 +10,18 @@ instrn_count = 0
 def splitter():
     f=open("input_file.txt")
     cmd_list=f.readlines()
-    if len(cmd_list) > 256:
+    cmd_list = [line.strip() for line in cmd_list]
+    if len(cmd_list) > 256: #128 given hai
        print("Lines exceed 256")
        exit()
-       
+    #print(cmd_list)  
+
     for i in range(0,len(cmd_list)):
         line=cmd_list[i].split()
         #checking for variable validity
         if line[0] == "var":
             if len(line) == 2:
-                if flagVarOver:
+                if flagVarOver: #flagVarOver define nahi kara, = 0 se initialize kardo
                     print(f"Error: Variables found after the beginning")
                     exit()
                 else:
@@ -37,23 +39,23 @@ def splitter():
                 print(f"General Syntax Error in line {i+1}: ")
                 exit()
         else:
-            flagVarOver = 1
+            flagVarOver = 1 #1 = True
             
         #checking for label validity        
         if line[0][-1] == ":":
             if not labelValidity(line[0][:-1]):
                 exit()
             else:
-                labels[line[0][:-1]] = i - len(variables)
+                labels[line[0][:-1]] = i - len(variables) #Yeh kya hai? #Labels kya hai?
                 continue
             
     #checking for validity of other commands
     commands = []
     for cmd in lines[len(variables) :]:
-        if ":" in cmd:
+        if ":" in cmd: #cmd me colon kyu hai?
             cmd1 = cmd.split(":")[1].strip()
             if isValidCmd(cmd1):
-                if isLineValid(cmd1):
+                if isLineValid(cmd1): #IMP, check this functions in errors.py
                     commands.append(cmd1)
                 else:
                     print(f"General Syntax Error on line {lineCount+1}: {cmd}")
@@ -70,6 +72,7 @@ def splitter():
         else:
             print("Error: Invalid Command on line " + str(lineCount + 1) + ": " + cmd)
             exit()
+
     hltCount = 0
     #checking for halt commands
     for c in commands:
@@ -85,7 +88,7 @@ def splitter():
     elif commands[-1]!="hlt":
         print("Error: hlt should be the last command")
     else:
-        for key in labels.keys():
+        for key in labels.keys(): #yeh kya kara??
             labels[key] = make_7bit_binary(labels[key])
     assembleOut(line)
 
