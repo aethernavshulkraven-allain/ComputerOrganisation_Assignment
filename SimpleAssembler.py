@@ -90,10 +90,11 @@ def splitter():
     else:
         for key in labels.keys():
             labels[key] = make_7bit_binary(labels[key])
+    assembleOut(line)
 
-        for cc in commands:
-            printbin(cc.split())
-        exit()
+        # for cc in commands:
+        #     printbin(cc.split())
+        # exit()
 
         
         
