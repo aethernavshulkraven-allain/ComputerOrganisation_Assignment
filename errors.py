@@ -39,7 +39,7 @@ def varNameValidity(varName: str):
     if duplicateVar(varName):
         print("Error: Duplicate Variable Name")
         return False
-    if varName.isdigit(): #ReCheck - Not in assignment to check this!
+    if varName.isdigit(): 
         print("Error:Varibale name cant be all digits ")
         return False
     if duplicateLabel(varName):
@@ -154,9 +154,9 @@ def isLineValid(line: str):
                 return True
         elif opcode[cmd][1] == "F":
             if len(line) == 1:
-                return True
+                return True #False
         elif line[-1] == ":":
-            return True
+            return True 
         else:
             return False
     else:
