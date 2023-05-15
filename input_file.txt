@@ -1,9 +1,4 @@
-mov R0 $50
-mov R1 $2
-mul R1 R0 R2
-label: 
-l1: add R1 R2 R3
-cmp R2 R3
-je label
-jgt l1
+var xyz
+add R0 R1 R2
+add R0 $100
 hlt

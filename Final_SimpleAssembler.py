@@ -260,30 +260,34 @@ def splitter():
     for cmd in cmd_list[len(variables):]:
         if ":" in cmd: 
             cmd1 = cmd.split(":")[1].strip()
-            print(cmd1)
+            #print(cmd1)
+            if (cmd1==""):
+                print(f"Error in line {org_cmd_list.index(cmd)+1} : Empty label defined")
+                exit()
+            
             if isValidCmd(cmd1):
                 if isLineValid(cmd1): 
                     commands.append(cmd1)
                 else:
-                    print(f"General Syntax Error on line {org_cmd_list.index(cmd)}: {cmd}")
+                    print(f"General Syntax Error on line {org_cmd_list.index(cmd)+1}: {cmd}")
                     exit()
             else:
-                print(f"General Syntax Error on line {org_cmd_list.index(cmd)}: {cmd}")
+                print(f"General Syntax Error on line {org_cmd_list.index(cmd)+1}: {cmd}")
                 exit()
         elif isValidCmd(cmd):
             if isLineValid(cmd): 
                 commands.append(cmd)
             else:
-                print(f"General Syntax Error on line {org_cmd_list.index(cmd)}: {cmd}")
+                print(f"General Syntax Error on line {org_cmd_list.index(cmd)+1}: {cmd}")
                 exit()
         else:
-            print("Error: Invalid Command on line " + str(lineCount + 1) + ": " + cmd)
+            print("Error: Invalid Command on line " +  str({org_cmd_list.index(cmd)+1}) + ": " + cmd)
             exit()
     
     for cmd in cmd_list[len(variables) :]:
         if (cmd[0] == "ld") or (cmd[0] == "st"):
             if cmd[-1] not in variables:
-                print("Error: Invalid Command: Variable Does NOT Exist " + str({cmd_list.index(cmd)}) + ": " + cmd)
+                print("Error: Invalid Command: Variable Does NOT Exist " + str({org_cmd_list.index(cmd)+1}) + ": " + cmd)
                 exit()
     
     #print(variables) #EXTRA
@@ -315,8 +319,8 @@ def splitter():
         line=cmd_list[i].split()
         parentstr += assembleOut(line) 
         parentstr += "\n"
-    #print(parentstr)          
-    return parentstr
+    print(parentstr)          
+    #return parentstr
 
 def make_7bit_binary(num):
     con_num = []
@@ -423,4 +427,4 @@ def assembleOut(cmd):
     else: 
         return "1101000000000000"
 
-print(splitter()) 
+splitter()
