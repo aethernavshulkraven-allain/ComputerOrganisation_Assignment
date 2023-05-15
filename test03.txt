@@ -1,7 +1,7 @@
 var xyz
 var abc
-l1: mov R0 $100
-mov R1 $50
+l1: mov R0 $5
+mov R1 $6
 mov R5 FLAGS
 l_2:	st R0 xyz
 	add R0 R0 R1

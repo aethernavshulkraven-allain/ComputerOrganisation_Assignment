@@ -319,8 +319,10 @@ def splitter():
         line=cmd_list[i].split()
         parentstr += assembleOut(line) 
         parentstr += "\n"
-    print(parentstr)          
-    #return parentstr
+    f1=open("machine_code_ouput.txt","w")
+    f1.write(parentstr)   
+    f1.close()
+    
 
 def make_7bit_binary(num):
     con_num = []
