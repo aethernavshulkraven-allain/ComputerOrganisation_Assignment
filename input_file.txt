@@ -1,11 +1,9 @@
-var xyz
-var abc
-l1: mov R0 $100
-mov R1 $50
-mov R5 FLAGS
-l_2:	st R0 xyz
-	add R0 R0 R1
-	ld R2 abc
-	je l1
-	jgt l_2
-hlt
+var x
+mov R1 $4
+mov R2 $4
+cmp R1 R2
+mov R3 FLAGS
+mov R4 $1
+cmp R3 R4
+jgt label
+label: hlt

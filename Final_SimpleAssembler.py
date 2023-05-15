@@ -96,7 +96,7 @@ def varNameValidity(varName: str):
 
 
 def regValidity(reg: str):
-    if reg in registers.keys():
+    if reg in registersF.keys():
         return True
     return False
 
@@ -182,8 +182,11 @@ def isLineValid(line: str):
             else:
                 return False
         if "FLAGS" in line:
-            print("Illegal use of FLAGS register. Command: " + " ".join(line))
-            exit()
+            if(line[0] == "mov"): 
+                return True
+            else: 
+                print("Illegal use of FLAGS register. Command: " + " ".join(line))
+                exit()
         if opcode[cmd][1] == "A":
             if regValidity(line[1]) and regValidity(line[2]) and regValidity(line[3]):
                 return True
@@ -315,10 +318,15 @@ def splitter():
             labels[key] = make_7bit_binary(labels[key])
 
     #Calling main function        
-    for i in range(len(variables),len(cmd_list)):
-        line=cmd_list[i].split()
-        parentstr += assembleOut(line) 
+    # for i in range(len(variables),len(cmd_list)):
+    #     line=cmd_list[i].split()
+    #     parentstr += assembleOut(line) 
+    #     parentstr += "\n"
+    
+    for cc in commands:
+        parentstr += assembleOut(cc.strip().split())
         parentstr += "\n"
+    
     f1=open("machine_code_ouput.txt","w")
     f1.write(parentstr)   
     f1.close()
