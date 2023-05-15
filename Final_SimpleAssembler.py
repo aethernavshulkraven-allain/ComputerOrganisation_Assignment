@@ -403,8 +403,10 @@ def typeE(cmd): #the same list given to "assembleOut" is given here
             if variables[i] == cmd[-1]:
                 ind = i + len(commands) - 1 
                 break
-    mem_addr = instrn_count + (ind + 1)
-    bin_mem_addr = make_7bit_binary(mem_addr)
+        mem_addr = instrn_count + (ind + 1)
+        bin_mem_addr = make_7bit_binary(mem_addr)
+    elif cmd[-1] in labels:
+        bin_mem_addr = labels[cmd[-1]]
     strout = ""
     strout += opcode[cmd[0]][0]
     strout += "0000"
