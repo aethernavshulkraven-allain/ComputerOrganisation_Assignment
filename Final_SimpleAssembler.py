@@ -5,7 +5,8 @@ variables = []
 commands = []
 labels = {}
 instrn_count = 0 
-
+parentstr=""
+f1=open("machine_code_ouput.txt","w")
 opcode = {
     "add": ("00000", "A"),
     "sub": ("0001", "A"),
@@ -73,10 +74,10 @@ def duplicateLabel(labelName: str):
 
 def labelValidity(labelName: str):
     if duplicateLabel(labelName):
-        print("Error: Duplicate label name: " + labelName)
+        f1.write("Error: Duplicate label name: " + labelName)
         exit()
     elif duplicateVar(labelName,variables):
-        print("Error: Label name is same as variable name: " + labelName)
+        f1.write("Error: Label name is same as variable name: " + labelName)
         exit()
     else:
         return True
@@ -84,13 +85,13 @@ def labelValidity(labelName: str):
 
 def varNameValidity(varName: str):
     if duplicateVar(varName,variables):
-        print("Error: Duplicate Variable Name")
+        f1.write("Error: Duplicate Variable Name")
         return False
     if varName.isdigit(): 
-        print("Error:Varibale name cant be all digits ")
+        f1.write("Error:Varibale name cant be all digits ")
         return False
     if duplicateLabel(varName):
-        print("Error: Variable name is same as label name: " + varName)
+        f1.write("Error: Variable name is same as label name: " + varName)
         return False
     return True
 
@@ -108,7 +109,7 @@ def immediateValidity(imm: str):
         if imm.isdigit() and (int(imm) in range(0, 128)):
             return True
         else:
-            print("Error: Imm more than 7 bits: " + imm)
+            f1.write("Error: Imm more than 7 bits: " + imm)
             return False
     return False
 
@@ -137,7 +138,7 @@ def lenChecker(line: str):
             if line[:-1].isalnum():
                 return True
             else:
-                print("Label isn't alphanumeric")
+                f1.write("Label isn't alphanumeric")
     return False
 
 
@@ -149,13 +150,13 @@ def isValidMemAddr(line: str):
         if line.split()[1] in labels.keys():
             return True
         else:
-            print("Label not found: " + line.split()[1])
+            f1.write("Label not found: " + line.split()[1])
             exit()
     elif cmd in loadStore:
         if line.split()[2] in variables:
             return True
         else:
-            print("Variable not found: " + line.split()[2])
+            f1.write("Variable not found: " + line.split()[2])
             exit()
 
     return False
@@ -177,7 +178,7 @@ def isLineValid(line: str):
             elif line[1] == "FLAGS" and regValidity(line[2]):
                 return True
             elif line[2] == "FLAGS":
-                print("Illegal use of FLAGS register. Command: " + " ".join(line))
+                f1.write("Illegal use of FLAGS register. Command: " + " ".join(line))
                 exit()
             else:
                 return False
@@ -185,7 +186,7 @@ def isLineValid(line: str):
             if(line[0] == "mov"): 
                 return True
             else: 
-                print("Illegal use of FLAGS register. Command: " + " ".join(line))
+                f1.write("Illegal use of FLAGS register. Command: " + " ".join(line))
                 exit()
         if opcode[cmd][1] == "A":
             if regValidity(line[1]) and regValidity(line[2]) and regValidity(line[3]):
@@ -233,12 +234,12 @@ def splitter():
         if line[0] == "var":
             if len(line) == 2:
                 if flagVarOver: 
-                    print(f"Error in line {i+1}: Variables found after the beginning")
+                    f1.write("Error in line "+str(i+1)+" Variables found after the beginning")
                     exit()
                 else:
                     var = line[1]
                     if duplicateVar(var,variables):
-                        print(f"Error in line {i+1}: Duplicate variable name: {var}")
+                        f1.write("Error in line"+str(i+1)+": Duplicate variable name: {var}")
                         exit()
                     else:
                         if varNameValidity(var):
@@ -247,7 +248,7 @@ def splitter():
                         else:
                             exit()
             else:
-                print(f"General Syntax Error in line {i+1}: ")
+                f1.write("General Syntax Error in line"+str (i+1))
                 exit()
         else:
             flagVarOver = 1 #1 = True
@@ -265,17 +266,17 @@ def splitter():
             cmd1 = cmd.split(":")[1].strip()
             #print(cmd1)
             if (cmd1==""):
-                print(f"Error in line {org_cmd_list.index(cmd)+1} : Empty label defined")
+                f1.write("Error in line"+str(org_cmd_list.index(cmd)+1)+" : Empty label defined")
                 exit()
             
             if isValidCmd(cmd1):
                 if isLineValid(cmd1): 
                     commands.append(cmd1)
                 else:
-                    print(f"General Syntax Error on line {org_cmd_list.index(cmd)+1}: {cmd}")
+                    f1.write("General Syntax Error on line"+ str(org_cmd_list.index(cmd)+1)+str(cmd))
                     exit()
             else:
-                print(f"General Syntax Error on line {org_cmd_list.index(cmd)+1}: {cmd}")
+                f1.write("General Syntax Error on line {org_cmd_list.index(cmd)+1}:"+str(cmd))
                 exit()
         elif isValidCmd(cmd):
             if isLineValid(cmd): 
