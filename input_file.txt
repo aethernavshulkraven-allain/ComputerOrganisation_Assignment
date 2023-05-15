@@ -1,78 +1,11 @@
-var abc
-var cde
 var xyz
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-label4: add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-label3: add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-label2: add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-label: add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
-add R0 R1 R2
+var abc
+l1: mov R0 $5
+mov R1 $6
+mov R5 FLAGS
+l_2:	st R0 xyz
+	add R0 R0 R1
+	ld R2 abc
+	je l1
+	jgt l_2
 hlt

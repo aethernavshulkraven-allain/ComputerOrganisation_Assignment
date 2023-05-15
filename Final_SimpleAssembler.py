@@ -1,4 +1,7 @@
-#LINE COUNT ME JHOL HAI!!!!!!
+# Arnav Shukla : type_a , type_b , make_7bit_binary , assembleOut
+# Avi Sharma : type_e , type_f , debugging
+# Aarya Khandelwal: splitter, error, params
+# Aryan Jain : type_c , type_d , debbugging 
 lineCount = 0  # Counting number of lines entered till now
 cmd_list = [] #List where commads readd from file are stored
 variables = []
