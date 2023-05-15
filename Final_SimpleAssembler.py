@@ -282,16 +282,16 @@ def splitter():
             if isLineValid(cmd): 
                 commands.append(cmd)
             else:
-                print(f"General Syntax Error on line {org_cmd_list.index(cmd)+1}: {cmd}")
+                f1.write("General Syntax Error on line"+str(org_cmd_list.index(cmd)+1)+":"+str(cmd))
                 exit()
         else:
-            print("Error: Invalid Command on line " +  str({org_cmd_list.index(cmd)+1}) + ": " + cmd)
+            f1.write("Error: Invalid Command on line " +  str({org_cmd_list.index(cmd)+1}) + ": " + cmd)
             exit()
     
     for cmd in cmd_list[len(variables) :]:
         if (cmd[0] == "ld") or (cmd[0] == "st"):
             if cmd[-1] not in variables:
-                print("Error: Invalid Command: Variable Does NOT Exist " + str({org_cmd_list.index(cmd)+1}) + ": " + cmd)
+                f1.write("Error: Invalid Command: Variable Does NOT Exist " + str({org_cmd_list.index(cmd)+1}) + ": " + cmd)
                 exit()
     
     #print(variables) #EXTRA
@@ -307,13 +307,13 @@ def splitter():
     #print(hltCount) #EXTRA
 
     if hltCount > 1:
-        print("Error: More than one hlt instruction found")
+        f1.write("Error: More than one hlt instruction found")
         exit()
     elif hltCount == 0:
-        print("Error: No hlt instruction found")
+        f1.write("Error: No hlt instruction found")
         exit()
     elif commands[-1]!="hlt":
-        print("Error: hlt should be the last command")
+        f1.write("Error: hlt should be the last command")
     else:
         for key in labels.keys(): 
             labels[key] = make_7bit_binary(labels[key])
@@ -328,9 +328,9 @@ def splitter():
         parentstr += assembleOut(cc.strip().split())
         parentstr += "\n"
     
-    f1=open("machine_code_ouput.txt","w")
+    
     f1.write(parentstr)   
-    f1.close()
+    
     
 
 def make_7bit_binary(num):
@@ -441,3 +441,4 @@ def assembleOut(cmd):
         return "1101000000000000"
 
 splitter()
+f1.close()
