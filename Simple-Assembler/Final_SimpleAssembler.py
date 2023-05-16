@@ -1,7 +1,8 @@
 # Arnav Shukla : type_a , type_b , make_7bit_binary , assembleOut
 # Avi Sharma : type_e , type_f , debugging
 # Aarya Khandelwal: splitter, error, params
-# Aryan Jain : type_c , type_d , debbugging 
+# Aryan Jain : type_c , type_d , debbugging
+import sys
 lineCount = 0  # Counting number of lines entered till now
 cmd_list = [] #List where commads readd from file are stored
 variables = []
@@ -9,10 +10,10 @@ commands = []
 labels = {}
 instrn_count = 0 
 parentstr=""
-f1=open("machine_code_ouput.txt","w")
+# f1=open("machine_code_ouput.txt","w")
 opcode = {
     "add": ("00000", "A"),
-    "sub": ("0001", "A"),
+    "sub": ("00001", "A"),
     "mov": [("00010", "B"), ("00011", "C")],
     "ld": ("00100", "D"),
     "st": ("00101", "D"),
@@ -77,10 +78,10 @@ def duplicateLabel(labelName: str):
 
 def labelValidity(labelName: str):
     if duplicateLabel(labelName):
-        f1.write("Error: Duplicate label name: " + labelName)
+        sys.stdout.write("Error: Duplicate label name: " + labelName)
         exit()
     elif duplicateVar(labelName,variables):
-        f1.write("Error: Label name is same as variable name: " + labelName)
+        sys.stdout.write("Error: Label name is same as variable name: " + labelName)
         exit()
     else:
         return True
@@ -88,13 +89,13 @@ def labelValidity(labelName: str):
 
 def varNameValidity(varName: str):
     if duplicateVar(varName,variables):
-        f1.write("Error: Duplicate Variable Name")
+        sys.stdout.write("Error: Duplicate Variable Name")
         return False
     if varName.isdigit(): 
-        f1.write("Error:Varibale name cant be all digits ")
+        sys.stdout.write("Error:Varibale name cant be all digits ")
         return False
     if duplicateLabel(varName):
-        f1.write("Error: Variable name is same as label name: " + varName)
+        sys.stdout.write("Error: Variable name is same as label name: " + varName)
         return False
     return True
 
@@ -112,7 +113,7 @@ def immediateValidity(imm: str):
         if imm.isdigit() and (int(imm) in range(0, 128)):
             return True
         else:
-            f1.write("Error: Imm more than 7 bits: " + imm)
+            sys.stdout.write("Error: Imm more than 7 bits: " + imm)
             return False
     return False
 
@@ -141,7 +142,7 @@ def lenChecker(line: str):
             if line[:-1].isalnum():
                 return True
             else:
-                f1.write("Label isn't alphanumeric")
+                sys.stdout.write("Label isn't alphanumeric")
     return False
 
 
@@ -153,13 +154,13 @@ def isValidMemAddr(line: str):
         if line.split()[1] in labels.keys():
             return True
         else:
-            f1.write("Label not found: " + line.split()[1])
+            sys.stdout.write("Label not found: " + line.split()[1])
             exit()
     elif cmd in loadStore:
         if line.split()[2] in variables:
             return True
         else:
-            f1.write("Variable not found: " + line.split()[2])
+            sys.stdout.write("Variable not found: " + line.split()[2])
             exit()
 
     return False
@@ -181,7 +182,7 @@ def isLineValid(line: str):
             elif line[1] == "FLAGS" and regValidity(line[2]):
                 return True
             elif line[2] == "FLAGS":
-                f1.write("Illegal use of FLAGS register. Command: " + " ".join(line))
+                sys.stdout.write("Illegal use of FLAGS register. Command: " + " ".join(line))
                 exit()
             else:
                 return False
@@ -189,7 +190,7 @@ def isLineValid(line: str):
             if(line[0] == "mov"): 
                 return True
             else: 
-                f1.write("Illegal use of FLAGS register. Command: " + " ".join(line))
+                sys.stdout.write("Illegal use of FLAGS register. Command: " + " ".join(line))
                 exit()
         if opcode[cmd][1] == "A":
             if regValidity(line[1]) and regValidity(line[2]) and regValidity(line[3]):
@@ -216,11 +217,13 @@ def isLineValid(line: str):
     else:
         return False
 
-f=open("input_file.txt","r")
-cmd_list = f.readlines()
+# f=open("input_file.txt","r")
+# cmd_list = f.readlines()
+for kx in sys.stdin:
+    cmd_list.append(kx)
 org_cmd_list = [line.strip() for line in cmd_list]
 cmd_list = [line for line in org_cmd_list if line != ""]
-f.close()
+# f.close()
 #print(cmd_list) #Extra
 
 def splitter():
@@ -237,12 +240,12 @@ def splitter():
         if line[0] == "var":
             if len(line) == 2:
                 if flagVarOver: 
-                    f1.write("Error in line "+str(i+1)+" Variables found after the beginning")
+                    sys.stdout.write("Error in line "+str(i+1)+" Variables found after the beginning")
                     exit()
                 else:
                     var = line[1]
                     if duplicateVar(var,variables):
-                        f1.write("Error in line"+str(i+1)+": Duplicate variable name: {var}")
+                        sys.stdout.write("Error in line"+str(i+1)+": Duplicate variable name: {var}")
                         exit()
                     else:
                         if varNameValidity(var):
@@ -251,7 +254,7 @@ def splitter():
                         else:
                             exit()
             else:
-                f1.write("General Syntax Error in line"+str (i+1))
+                sys.stdout.write("General Syntax Error in line"+str (i+1))
                 exit()
         else:
             flagVarOver = 1 #1 = True
@@ -269,32 +272,32 @@ def splitter():
             cmd1 = cmd.split(":")[1].strip()
             #print(cmd1)
             if (cmd1==""):
-                f1.write("Error in line"+str(org_cmd_list.index(cmd)+1)+" : Empty label defined")
+                sys.stdout.write("Error in line"+str(org_cmd_list.index(cmd)+1)+" : Empty label defined")
                 exit()
             
             if isValidCmd(cmd1):
                 if isLineValid(cmd1): 
                     commands.append(cmd1)
                 else:
-                    f1.write("General Syntax Error on line"+ str(org_cmd_list.index(cmd)+1)+str(cmd))
+                    sys.stdout.write("General Syntax Error on line"+ str(org_cmd_list.index(cmd)+1)+str(cmd))
                     exit()
             else:
-                f1.write("General Syntax Error on line {org_cmd_list.index(cmd)+1}:"+str(cmd))
+                sys.stdout.write("General Syntax Error on line {org_cmd_list.index(cmd)+1}:"+str(cmd))
                 exit()
         elif isValidCmd(cmd):
             if isLineValid(cmd): 
                 commands.append(cmd)
             else:
-                f1.write("General Syntax Error on line"+str(org_cmd_list.index(cmd)+1)+":"+str(cmd))
+                sys.stdout.write("General Syntax Error on line"+str(org_cmd_list.index(cmd)+1)+":"+str(cmd))
                 exit()
         else:
-            f1.write("Error: Invalid Command on line " +  str({org_cmd_list.index(cmd)+1}) + ": " + cmd)
+            sys.stdout.write("Error: Invalid Command on line " +  str({org_cmd_list.index(cmd)+1}) + ": " + cmd)
             exit()
     
     for cmd in cmd_list[len(variables) :]:
         if (cmd[0] == "ld") or (cmd[0] == "st"):
             if cmd[-1] not in variables:
-                f1.write("Error: Invalid Command: Variable Does NOT Exist " + str({org_cmd_list.index(cmd)+1}) + ": " + cmd)
+                sys.stdout.write("Error: Invalid Command: Variable Does NOT Exist " + str({org_cmd_list.index(cmd)+1}) + ": " + cmd)
                 exit()
     
     #print(variables) #EXTRA
@@ -308,15 +311,14 @@ def splitter():
             hltCount += 1
 
     #print(hltCount) #EXTRA
-
     if hltCount > 1:
-        f1.write("Error: More than one hlt instruction found")
-        exit()
+            sys.stdout.write("Error: More than one hlt instruction found")
+            exit()
     elif hltCount == 0:
-        f1.write("Error: No hlt instruction found")
+        sys.stdout.write("Error: No hlt instruction found")
         exit()
     elif commands[-1]!="hlt":
-        f1.write("Error: hlt should be the last command")
+        sys.stdout.write("Error: hlt should be the last command")
     else:
         for key in labels.keys(): 
             labels[key] = make_7bit_binary(labels[key])
@@ -332,9 +334,9 @@ def splitter():
         parentstr += "\n"
     
     
-    f1.write(parentstr)   
-    
-    
+       # sys.stdout.write(parentstr)   
+        
+        
 
 def make_7bit_binary(num):
     con_num = []
@@ -444,4 +446,4 @@ def assembleOut(cmd):
         return "1101000000000000"
 
 splitter()
-f1.close()
+#f1.close()
