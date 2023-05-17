@@ -1,8 +1,5 @@
-# Arnav Shukla : type_a , type_b , make_7bit_binary , assembleOut
-# Avi Sharma : type_e , type_f , debugging
-# Aarya Khandelwal: splitter, error, params
-# Aryan Jain : type_c , type_d , debbugging
 import sys
+
 lineCount = 0  # Counting number of lines entered till now
 cmd_list = [] #List where commads readd from file are stored
 variables = []
@@ -10,6 +7,7 @@ commands = []
 labels = {}
 instrn_count = 0 
 parentstr=""
+
 # f1=open("machine_code_ouput.txt","w")
 opcode = {
     "add": ("00000", "A"),
@@ -334,7 +332,7 @@ def splitter():
         parentstr += "\n"
     
     
-       # sys.stdout.write(parentstr)   
+    sys.stdout.write(parentstr)   
         
         
 
