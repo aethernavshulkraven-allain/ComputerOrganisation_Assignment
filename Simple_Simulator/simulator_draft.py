@@ -346,7 +346,7 @@ def jlt(line):
 
 
 def dump():
-    print(integerToBinary(int(PC), 8), end=" ")
+    print(integerToBinary(int(PC), 7), end=" ")
     for reg in R:
         print(integerToBinary(int(R[reg]), 16), end=" ")
     print()
