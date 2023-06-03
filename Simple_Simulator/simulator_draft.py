@@ -94,6 +94,7 @@ class memHandler:
 
     def dump(self):
         for Address in self.mem:
+            f1.write(Address+'\n')
             sys.stdout.write(Address + "\n")
 
 
