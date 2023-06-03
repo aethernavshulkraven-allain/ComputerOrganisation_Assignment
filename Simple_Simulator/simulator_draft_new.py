@@ -5,8 +5,8 @@ import sys
 # Register File (RF): The RF takes in the register name (R0, R1, ... R6 or FLAGS) and
 # returns the value stored at that register.
 # here R is the RF
-f1 = open("input.txt","r")
-f2 = open("output.txt","w")
+f1 = open("Simple_Simulator\input.txt","r")
+f2 = open("Simple_Simulator\output.txt","w")
 R = {
     "000": 0,
     "001": 0,
@@ -110,6 +110,7 @@ hltFlag = 0
 memFile = memHandler()
 memFile.load(f1)
 # print(memFile.mem )
+print("REACHED")
 
 
 
