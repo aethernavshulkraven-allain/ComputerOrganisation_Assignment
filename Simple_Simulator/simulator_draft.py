@@ -5,6 +5,7 @@ import sys
 # Register File (RF): The RF takes in the register name (R0, R1, ... R6 or FLAGS) and
 # returns the value stored at that register.
 # here R is the RF
+
 R = {
     "000": 0,
     "001": 0,
