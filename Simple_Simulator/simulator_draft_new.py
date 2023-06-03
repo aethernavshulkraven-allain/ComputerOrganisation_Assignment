@@ -382,77 +382,75 @@ while hltFlag != 1:
         reg2 = line[10:13].strip()
         reg3 = line[13:].strip()
 
-        if opcode == "10000":
+        if opcode == "00000":
             add(reg1, reg2, reg3)
             PC += 1
 
-        elif opcode == "10001":
+        elif opcode == "00001":
             sub(reg1, reg2, reg3)
             PC += 1
 
-        elif opcode == "10110":
+        elif opcode == "00010":
             mul(reg1, reg2, reg3)
             PC += 1
 
-        elif opcode == "11010":
+        elif opcode == "01010":
             xor(reg1, reg2, reg3)
             PC += 1
 
-        elif opcode == "11011":
+        elif opcode == "01011":
             OR(reg1, reg2, reg3)
             PC += 1
 
-        elif opcode == "11100":
+        elif opcode == "01100":
             AND(reg1, reg2, reg3)
             PC += 1
 
-        elif opcode == "10001":
-            sub(reg1, reg2, reg3)
-            PC += 1
 
-        elif opcode == "00000":
+        elif opcode == "10000":
             addf(reg1, reg2, reg3)
 
-        elif opcode == "00001":
+        elif opcode == "10001":
             subf(reg1, reg2, reg3)
+          
 
     elif opcodeType == "B":
         reg1 = line[5:8].strip()
         imm1 = line[8:].strip()
         imm = binaryToInteger(line[8:].strip())
 
-        if opcode == "10010":
+        if opcode == "00010":
             movImm(reg1, imm)
             PC += 1
 
-        elif opcode == "11001":
+        elif opcode == "01001":
             lShift(reg1, imm)
             PC += 1
 
-        elif opcode == "11000":
+        elif opcode == "01000":
             rShift(reg1, imm)
             PC += 1
 
-        elif opcode == "10111":
+        elif opcode == "10010":
             movf(reg1, imm1)
 
     elif opcodeType == "C":
         reg1 = line[10:13].strip()
         reg2 = line[13:].strip()
 
-        if opcode == "10011":
+        if opcode == "00011":
             movReg(reg1, reg2)
             PC += 1
 
-        elif opcode == "10111":
+        elif opcode == "00111":
             divide(reg1, reg2)
             PC += 1
 
-        elif opcode == "11101":
+        elif opcode == "01101":
             invert(reg1, reg2)
             PC += 1
 
-        elif opcode == "11110":
+        elif opcode == "01110":
             compare(reg1, reg2)
             PC += 1
 
@@ -460,27 +458,27 @@ while hltFlag != 1:
         reg1 = line[5:8].strip()
         memAddr = line[8:].strip()
 
-        if opcode == "10100":
+        if opcode == "00100":
             load(reg1, memAddr)
             PC += 1
 
-        elif opcode == "10101":
+        elif opcode == "00101":
             store(reg1, memAddr)
             PC += 1
 
     elif opcodeType == "E":
         memAddr = line[8:].strip()
 
-        if opcode == "11111":
+        if opcode == "01111":
             jmp(memAddr)
 
-        elif opcode == "01100":
+        elif opcode == "11100":
             jlt(memAddr)
 
-        elif opcode == "01101":
+        elif opcode == "11101":
             jgt(memAddr)
 
-        elif opcode == "01111":
+        elif opcode == "11111":
             je(memAddr)
 
     elif opcodeType == "F":
