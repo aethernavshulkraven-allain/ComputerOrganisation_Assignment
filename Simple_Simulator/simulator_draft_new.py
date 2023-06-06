@@ -418,9 +418,9 @@ while hltFlag != 1:
           
 
     elif opcodeType == "B":
-        reg1 = line[5:8].strip()
-        imm1 = line[8:].strip()
-        imm = binaryToInteger(line[8:].strip())
+        reg1 = line[6:9].strip()
+        imm1 = line[9:].strip()
+        imm = binaryToInteger(line[9:].strip())
 
         if opcode == "00010":
             movImm(reg1, imm)
@@ -459,6 +459,7 @@ while hltFlag != 1:
 
     elif opcodeType == "D":
         reg1 = line[6:9].strip()
+
         memAddr = line[9:].strip()
 
         if opcode == "00100":
@@ -470,7 +471,7 @@ while hltFlag != 1:
             PC += 1
 
     elif opcodeType == "E":
-        memAddr = line[8:].strip()
+        memAddr = line[9:].strip()
 
         if opcode == "01111":
             jmp(memAddr)
