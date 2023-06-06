@@ -44,10 +44,17 @@ opc = {
 
 # *********************** CONVERSIONS *****************************
 
-def binaryToInteger(binStr): #binary to integer
-    return int(binStr, 2)
+def decimalConverter(binStr): #binary to integer
+    l=len(binStr)
+    sum=0
+    pow=0
+    for i in range(l-1,-1,-1):
+        sum=sum+((2**pow)*int(binStr[i]))
+        pow=pow+1
+    return sum  
+        
 
-def integerToBinary(intVal, bitSize): #integer to binary
+def binaryConverter(intVal, bitSize): #integer to binary
     binStr = bin(intVal)[2:]
     if bitSize > len(binStr):
         binStr = "0" * (bitSize - len(binStr)) + binStr
@@ -89,10 +96,10 @@ class memHandler:
         return self.mem[pc]
 
     def getValueAtAdd(self, memAdd):
-        return binaryToInteger(self.mem[binaryToInteger(memAdd)])
+        return decimalConverter(self.mem[decimalConverter(memAdd)])
 
     def loadValueAtAdd(self, memAdd, val):
-        self.mem[binaryToInteger(memAdd)] = integerToBinary(val, 16)
+        self.mem[decimalConverter(memAdd)] = binaryConverter(val, 16)
 
     def dump(self):
         for Address in self.mem:
@@ -123,9 +130,9 @@ print("REACHED")
 def floatToDec(binNum: str):
     exp = binNum[:3]
     mantissa = binNum[3:]
-    exp = bin(binaryToInteger(exp))[2:]
+    exp = bin(decimalConverter(exp))[2:]
     mantissa = "1" + "".join(mantissa)
-    dec = binaryToInteger(mantissa[: -(len(exp))])
+    dec = decimalConverter(mantissa[: -(len(exp))])
     exp = list(exp)
     exp = [int(i) for i in exp]
     res = 0
@@ -269,15 +276,15 @@ def compare(r1, r2):
 
 
 def load(r1, mem):
-    R[r1] = binaryToInteger(memFile.mem[binaryToInteger(mem)])
+    R[r1] = decimalConverter(memFile.mem[decimalConverter(mem)])
     resetFlag()
     dump()
 
 
 def store(r1, mem):
     print(mem)
-    print(binaryToInteger(mem))
-    memFile.mem[binaryToInteger(mem)] = integerToBinary(R[r1], 16)
+    print(decimalConverter(mem))
+    memFile.mem[decimalConverter(mem)] = binaryConverter(R[r1], 16)
     resetFlag()
     dump()
 
@@ -286,7 +293,7 @@ def jmp(mem):
     resetFlag()
     dump()
     global PC
-    PC = binaryToInteger(mem)
+    PC = decimalConverter(mem)
 
 
 def jgt(line):
@@ -294,7 +301,7 @@ def jgt(line):
     if R["111"] == 2:
         resetFlag()
         dump()
-        PC = binaryToInteger(line)
+        PC = decimalConverter(line)
     else:
         resetFlag()
         dump()
@@ -336,7 +343,7 @@ def je(line):
     if R["111"] == 1:
         resetFlag()
         dump()
-        PC = binaryToInteger(line)
+        PC = decimalConverter(line)
     else:
         resetFlag()
         dump()
@@ -348,7 +355,7 @@ def jlt(line):
     if R["111"] == 4:
         resetFlag()
         dump()
-        PC = binaryToInteger(line)
+        PC = decimalConverter(line)
     else:
         resetFlag()
         dump()
@@ -356,14 +363,14 @@ def jlt(line):
 
 
 def dump():
-    # print(integerToBinary(int(PC), 7), end=" ")
-    f2.write(integerToBinary(int(PC), 7))
+    # print(binaryConverter(int(PC), 7), end=" ")
+    f2.write(binaryConverter(int(PC), 7))
     f2.write(" ")
     
     for reg in R:
-        # print(integerToBinary(int(R[reg]), 16), end=" ")
+        # print(binaryConverter(int(R[reg]), 16), end=" ")
         
-        f2.write(integerToBinary(int(R[reg]), 16))
+        f2.write(binaryConverter(int(R[reg]), 16))
         f2.write(" ")
     f2.write("\n")
 
@@ -420,7 +427,7 @@ while hltFlag != 1:
     elif opcodeType == "B":
         reg1 = line[5:8].strip()
         imm1 = line[8:].strip()
-        imm = binaryToInteger(line[8:].strip())
+        imm = decimalConverter(line[8:].strip())
 
         if opcode == "00010":
             movImm(reg1, imm)
