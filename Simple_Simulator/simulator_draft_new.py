@@ -89,28 +89,26 @@ def binaryConverter(num, bitSize): #integer to binary
 # Memory (MEM): MEM takes in an 7 bit address and returns a 16 bit value as the data.
 # The MEM stores 256 bytes, initialized to 0s.
 
-class memHandler:
-    TOT_SIZE = 128
-    mem = ["0000000000000000"] * TOT_SIZE
+TOT_SIZE = 128
+mem_stack = ["0000000000000000"] * TOT_SIZE
 
-    def load(self, inputFile):
-        
-        for index, line in enumerate(inputFile):
-            self.mem[index] = line.rstrip("\n")
+def load(inputFile):
+    
+    for index, line in enumerate(inputFile):
+        mem_stack[index] = line.rstrip("\n")
 
-    def getInst(self, pc): # this provides instruction of the respective PC
-        return self.mem[pc]
+def getInst(pc): # this provides instruction of the respective PC
+    return mem_stack[pc]
 
-    def getValueAtAdd(self, memAdd):
-        return decimalConverter(self.mem[decimalConverter(memAdd)])
+def getValueAtAdd(memAdd):
+    return decimalConverter(mem_stack[decimalConverter(memAdd)])
 
-    def loadValueAtAdd(self, memAdd, val):
-        self.mem[decimalConverter(memAdd)] = binaryConverter(val, 16)
+def loadValueAtAdd(memAdd, val):
+    mem_stack[decimalConverter(memAdd)] = binaryConverter(val, 16)
 
-    def dump(self):
-        for Address in self.mem:
-            f2.write(Address+'\n')
-            # sys.stdout.write(Address + "\n")
+def dump_memory():
+    for Address in mem_stack:
+        f2.write(Address+'\n')
 
 
 PC = 0 #Program Counter (PC): The PC is an 7 bit register which points to the current instruction.
@@ -120,9 +118,8 @@ temp = []
 
 hltFlag = 0
 
-memFile = memHandler()
-memFile.load(f1)
-# print(memFile.mem )
+
+load(f1)
 print("REACHED")
 
 
@@ -282,7 +279,7 @@ def compare(r1, r2):
 
 
 def load(r1, mem):
-    R[r1] = decimalConverter(memFile.mem[decimalConverter(mem)])
+    R[r1] = decimalConverter(mem_stack[decimalConverter(mem)])
     resetFlag()
     dump()
 
@@ -290,7 +287,7 @@ def load(r1, mem):
 def store(r1, mem):
     print(mem)
     print(decimalConverter(mem))
-    memFile.mem[decimalConverter(mem)] = binaryConverter(R[r1], 16)
+    mem_stack[decimalConverter(mem)] = binaryConverter(R[r1], 16)
     resetFlag()
     dump()
 
@@ -389,7 +386,7 @@ while hltFlag != 1:
     if count > 100000:
         break
     Cycle += 1
-    line = memFile.getInst(PC)
+    line = getInst(PC)
     opcode = line[0:5]
     opcodeType = findOpcodeType(opcode)
 
@@ -502,6 +499,6 @@ while hltFlag != 1:
         hltFlag = 1
         dump()
         break
-memFile.dump()
+dump_memory()
 f1.close()
 f2.close()
