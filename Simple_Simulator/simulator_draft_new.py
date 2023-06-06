@@ -5,8 +5,8 @@ import sys
 # Register File (RF): The RF takes in the register name (R0, R1, ... R6 or FLAGS) and
 # returns the value stored at that register.
 # here R is the RF
-f1 = open("Simple_Simulator\input.txt","r")
-f2 = open("Simple_Simulator\output.txt","w")
+f1 = open("Simple_Simulator/input.txt","r")
+f2 = open("Simple_Simulator/output.txt","w")
 R = {
     "000": 0,
     "001": 0,
@@ -275,6 +275,8 @@ def load(r1, mem):
 
 
 def store(r1, mem):
+    print(mem)
+    print(binaryToInteger(mem))
     memFile.mem[binaryToInteger(mem)] = integerToBinary(R[r1], 16)
     resetFlag()
     dump()
@@ -456,8 +458,8 @@ while hltFlag != 1:
             PC += 1
 
     elif opcodeType == "D":
-        reg1 = line[5:8].strip()
-        memAddr = line[8:].strip()
+        reg1 = line[6:9].strip()
+        memAddr = line[9:].strip()
 
         if opcode == "00100":
             load(reg1, memAddr)
