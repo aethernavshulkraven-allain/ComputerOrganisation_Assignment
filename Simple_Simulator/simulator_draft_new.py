@@ -92,19 +92,12 @@ def binaryConverter(num, bitSize): #integer to binary
 TOT_SIZE = 128
 mem_stack = ["0000000000000000"] * TOT_SIZE
 
-def load(inputFile):
-    
-    for index, line in enumerate(inputFile):
-        mem_stack[index] = line.rstrip("\n")
-
-def getInst(pc): # this provides instruction of the respective PC
-    return mem_stack[pc]
-
-def getValueAtAdd(memAdd):
-    return decimalConverter(mem_stack[decimalConverter(memAdd)])
-
-def loadValueAtAdd(memAdd, val):
-    mem_stack[decimalConverter(memAdd)] = binaryConverter(val, 16)
+def fileReader(inputFile):
+    assembleOut=inputFile.readlines()
+    i=0
+    for line in assembleOut:
+        mem_stack[i] = line.rstrip("\n")
+        i=i+1
 
 def dump_memory():
     for Address in mem_stack:
@@ -119,7 +112,7 @@ temp = []
 hltFlag = 0
 
 
-load(f1)
+fileReader(f1)
 print("REACHED")
 
 
@@ -130,20 +123,20 @@ print("REACHED")
 # to get the stored instruction from MEM, and executes the instruction by updating the RF
 # and PC.
 
-def floatToDec(binNum: str):
-    exp = binNum[:3]
-    mantissa = binNum[3:]
-    exp = bin(decimalConverter(exp))[2:]
-    mantissa = "1" + "".join(mantissa)
-    dec = decimalConverter(mantissa[: -(len(exp))])
-    exp = list(exp)
-    exp = [int(i) for i in exp]
-    res = 0
-    idx = 1
-    for i in exp:
-        res += (i * 2) ** (-idx)
-        idx += 1
-    return dec + res
+# def floatToDec(binNum: str):
+#     exp = binNum[:3]
+#     mantissa = binNum[3:]
+#     exp = bin(decimalConverter(exp))[2:]
+#     mantissa = "1" + "".join(mantissa)
+#     dec = decimalConverter(mantissa[: -(len(exp))])
+#     exp = list(exp)
+#     exp = [int(i) for i in exp]
+#     res = 0
+#     idx = 1
+#     for i in exp:
+#         res += (i * 2) ** (-idx)
+#         idx += 1
+#     return dec + res
 
 
 def resetFlag(): # !!!!!!!!!!!!!!! PLS EXPLAIN THE PURPOSE OF THIS !!!!!!!!!!!!!!!!
@@ -386,7 +379,7 @@ while hltFlag != 1:
     if count > 100000:
         break
     Cycle += 1
-    line = getInst(PC)
+    line = mem_stack[PC]
     opcode = line[0:5]
     opcodeType = findOpcodeType(opcode)
 
