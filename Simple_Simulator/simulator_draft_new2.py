@@ -124,7 +124,7 @@ def FloatConversion(binNum: str):
     e = binNum[:3]
     M = binNum[3:]
     str_M = "".join(M)
-    str_M = "1"+str_M
+    str_M = "1"+str_M # significand
 
     e = bin(binaryToInteger(e))[2:]
     new = binaryToInteger(M[: -(len(e))])
@@ -306,15 +306,16 @@ def jgt(line):
         dump()
         PC += 1
 
+# bias = 3
 
 def float_add(r1, r2, r3):
     # add floating point r2 and r3 and store in r1
     dec_r2 = FloatConversion(R[r2])
     dec_r3 = FloatConversion(R[r3])
     R[r1] = dec_r2 + dec_r3
-    if FloatConversion(R[r2])+FloatConversion(R[r3]) > 252.0:
+    if FloatConversion(R[r2])+FloatConversion(R[r3]) > 15.75:
         R["111"] = 8
-        R[r1] = 252.0
+        R[r1] = 15.75
         dump()
     else:
         resetFlag()
@@ -413,7 +414,7 @@ while hltFlag != 1:
             xor(reg1, reg2, reg3)
             PC += 1
 
-        elif opcode == "01011":s
+        elif opcode == "01011":
             OR(reg1, reg2, reg3)
             PC += 1
 

@@ -70,19 +70,19 @@ def binaryConverter(num, bitSize): #integer to binary
 
 # ************************ BHAI YE CHAHIYE Q2 KE LIYE?, PLS CONFIRM!   NAHII NAHII Q3 KE LIYE ***************************
 
-# def floatValidity(imm: str):
-#     imm = list(imm)
-#     if imm[0] == "$":
-#         try:
-#             imm = float("".join(imm[1:]))
-#             if (
-#                 type(imm) == float
-#             ):  # ADD and imm in range(), the range of mantissa and exponent
-#                 return True
-#         except ValueError:
-#             print("Invalid immediate.")
-#             return False
-#     return False
+def floatValidity(imm: str):
+    imm = list(imm)
+    if imm[0] == "$":
+        try:
+            imm = float("".join(imm[1:]))
+            if (
+                type(imm) == float
+            ):  # ADD and imm in range(), the range of M and exponent
+                return True
+        except ValueError:
+            print("Invalid immediate.")
+            return False
+    return False
 
 # *************************** MEM *****************************
 
@@ -123,20 +123,26 @@ print("REACHED")
 # to get the stored instruction from MEM, and executes the instruction by updating the RF
 # and PC.
 
-# def floatToDec(binNum: str):
-#     exp = binNum[:3]
-#     mantissa = binNum[3:]
-#     exp = bin(decimalConverter(exp))[2:]
-#     mantissa = "1" + "".join(mantissa)
-#     dec = decimalConverter(mantissa[: -(len(exp))])
-#     exp = list(exp)
-#     exp = [int(i) for i in exp]
-#     res = 0
-#     idx = 1
-#     for i in exp:
-#         res += (i * 2) ** (-idx)
-#         idx += 1
-#     return dec + res
+def FloatConversion(binNum: str):
+    e = binNum[:3]
+    M = binNum[3:]
+    str_M = "".join(M)
+    str_M = "1"+str_M # significand
+
+    e = bin(decimalConverter(e))[2:]
+    new = decimalConverter(M[: -(len(e))])
+
+    e = list(e)
+    e1 = []
+    for i in e:
+        e1.append(int(i))
+    res = 0
+    j = 1
+    for i in e1:
+        res += (i * 2) ** (-j)
+        j += 1
+    ans = new + res
+    return ans
 
 
 def resetFlag(): # !!!!!!!!!!!!!!! PLS EXPLAIN THE PURPOSE OF THIS !!!!!!!!!!!!!!!!
@@ -303,33 +309,38 @@ def jgt(line):
         dump()
         PC += 1
 
-
-def addf(r1, r2, r3):
+def float_add(r1, r2, r3):
     # add floating point r2 and r3 and store in r1
-    R[r1] = floatToDec(R[r2]) + floatToDec(R[r3])
-    if R[r1] > 252.0:
-        R[r1] = 252.0
+    dec_r2 = FloatConversion(R[r2])
+    dec_r3 = FloatConversion(R[r3])
+    R[r1] = dec_r2 + dec_r3
+    if FloatConversion(R[r2])+FloatConversion(R[r3]) > 15.75:
         R["111"] = 8
+        R[r1] = 15.75
         dump()
     else:
         resetFlag()
         dump()
 
 
-def subf(r1, r2, r3):
+def float_sub(r1, r2, r3):
     # subtract floating point r2 and r3 and store in r1
-    R[r1] = floatToDec(R[r2]) - floatToDec(R[r3])
-    if R[r1] < 0:
-        R[r1] = 0
+    dec_r2 = FloatConversion(R[r2])
+    dec_r3 = FloatConversion(R[r3])
+    R[r1] = dec_r2 - dec_r3
+    if FloatConversion(R[r2])-FloatConversion(R[r3]) < 0:
         R["111"] = 8
+
+        R[r1] = 0
+        
         dump()
     else:
         resetFlag()
         dump()
 
 
-def movf(r1, imm):
-    R[r1] = floatToDec(imm)
+def float_mov(r1, imm):
+    R[r1] = FloatConversion(imm)
     resetFlag()
     dump()
 
