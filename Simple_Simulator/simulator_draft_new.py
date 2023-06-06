@@ -19,7 +19,7 @@ R = {
 }
 
 
-opc = {
+opcodeStack = {
     "00000": "A",
     "00001": "A",
     "00010": "B",
@@ -54,15 +54,21 @@ def decimalConverter(binStr): #binary to integer
     return sum  
         
 
-def binaryConverter(intVal, bitSize): #integer to binary
-    binStr = bin(intVal)[2:]
-    if bitSize > len(binStr):
-        binStr = "0" * (bitSize - len(binStr)) + binStr
-    else:
-        binStr = binStr[(len(binStr) - bitSize) :]
-    return binStr
+def binaryConverter(num, bitSize): #integer to binary
+   
+    con_num = []
+    while num >= 1:
+        rem = num % 2
+        con_num.append(str(int(rem)))
+        num = num // 2
+    con_num = con_num[::-1]
+    bin = "".join(con_num)
+    if len(bin) < bitSize:
+        bin = "0" * (bitSize - len(bin)) + bin
+    return bin
 
-# ************************ BHAI YE CHAHIYE Q2 KE LIYE?, PLS CONFIRM! ***************************
+
+# ************************ BHAI YE CHAHIYE Q2 KE LIYE?, PLS CONFIRM!   NAHII NAHII Q3 KE LIYE ***************************
 
 # def floatValidity(imm: str):
 #     imm = list(imm)
@@ -147,8 +153,8 @@ def resetFlag(): # !!!!!!!!!!!!!!! PLS EXPLAIN THE PURPOSE OF THIS !!!!!!!!!!!!!
     R["111"] = 0
 
 
-def findOpcodeType(op_bin):  # takes the opcode in binary
-    return opc[op_bin]
+def findOpcodeType(op_bin):  # takes the opcodeode in binary
+    return opcodeStack[op_bin]
 
 
 def movImm(reg1, imm):  # assuming immediate is already a decimal here
@@ -427,7 +433,7 @@ while hltFlag != 1:
     elif opcodeType == "B":
         reg1 = line[5:8].strip()
         imm1 = line[8:].strip()
-        imm = binaryToInteger(line[8:].strip())
+        imm = decimalConverter(line[8:].strip())
 
         if opcode == "00010":
             movImm(reg1, imm)
