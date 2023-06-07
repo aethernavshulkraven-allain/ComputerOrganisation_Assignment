@@ -5,9 +5,8 @@ import sys
 # Register File (RF): The RF takes in the register name (R0, R1, ... R6 or FLAGS) and
 # returns the value stored at that register.
 # here R is the RF
-#f1 = open("Simple_Simulator/input.txt","r")
-#f2 = open("Simple_Simulator/output.txt","w")
-
+f1 = open("SimpleSimulator/input.txt","r")
+f2 = open("SimpleSimulator/output.txt","w")
 R = {
     "000": 0,
     "001": 0,
@@ -20,7 +19,7 @@ R = {
 }
 
 
-opcodeStack = {
+opc = {
     "00000": "A",
     "00001": "A",
     "00010": "B",
@@ -45,51 +44,61 @@ opcodeStack = {
 
 # *********************** CONVERSIONS *****************************
 
-def decimalConverter(binStr): #binary to integer
-    l=len(binStr)
-    sum=0
-    pow=0
-    for i in range(l-1,-1,-1):
-        sum=sum+((2**pow)*int(binStr[i]))
-        pow=pow+1
-    return sum  
-        
+def binaryToInteger(binStr): #binary to integer
+    return int(binStr, 2)
 
-def binaryConverter(num, bitSize): #integer to binary
-   
-    con_num = []
-    while num >= 1:
-        rem = num % 2
-        con_num.append(str(int(rem)))
-        num = num // 2
-    con_num = con_num[::-1]
-    bin = "".join(con_num)
-    if len(bin) < bitSize:
-        bin = "0" * (bitSize - len(bin)) + bin
-    return bin
+def integerToBinary(intVal, bitSize): #integer to binary
+    binStr = bin(intVal)[2:]
+    if bitSize > len(binStr):
+        binStr = "0" * (bitSize - len(binStr)) + binStr
+    else:
+        binStr = binStr[(len(binStr) - bitSize) :]
+    return binStr
 
+# ************************ BHAI YE CHAHIYE Q2 KE LIYE?, PLS CONFIRM! ***************************
+
+def floatValidity(imm: str):
+    imm = list(imm)
+    if imm[0] == "$":
+        try:
+            imm = float("".join(imm[1:]))
+            if (
+                type(imm) == float
+            ):  # ADD and imm in range(), the range of M and exponent
+                return True
+        except ValueError:
+            print("Invalid immediate.")
+            return False
+    return False
 
 # *************************** MEM *****************************
 
 # Memory (MEM): MEM takes in an 7 bit address and returns a 16 bit value as the data.
 # The MEM stores 256 bytes, initialized to 0s.
 
-TOT_SIZE = 128
-mem_stack = ["0000000000000000"] * TOT_SIZE
+class memHandler:
+    TOT_SIZE = 128
+    mem = ["0000000000000000"] * TOT_SIZE
 
+    def load(self, inputFile):
 
-def fileReader():
-    assembleOut = []
-    for kx in sys.stdin:
-        assembleOut.append(kx)
-    i=0
-    for line in assembleOut:
-        mem_stack[i] = line.rstrip("\n")
-        i=i+1
+        for index, line in enumerate(inputFile):
+            self.mem[index] = line.rstrip("\n")
 
-def dump_memory():
-    for Address in mem_stack:
-        sys.stdout.write(Address+'\n')
+    def getInst(self, pc): # this provides instruction of the respective PC
+        return self.mem[pc]
+
+    def getValueAtAdd(self, memAdd):
+        return binaryToInteger(self.mem[binaryToInteger(memAdd)])
+
+    def loadValueAtAdd(self, memAdd, val):
+        self.mem[binaryToInteger(memAdd)] = integerToBinary(val, 16)
+
+    def dump(self):
+        for Address in self.mem:
+            f2.write(Address+'\n')
+            # sys.stdout.write(Address + "\n")
+
 
 PC = 0 #Program Counter (PC): The PC is an 7 bit register which points to the current instruction.
 Cycle = 0
@@ -98,8 +107,12 @@ temp = []
 
 hltFlag = 0
 
-fileReader()
-#print("REACHED")
+memFile = memHandler()
+memFile.load(f1)
+# print(memFile.mem )
+print("REACHED")
+
+
 
 # ******************************** EE *******************************
 
@@ -111,10 +124,10 @@ def FloatConversion(binNum: str):
     e = binNum[:3]
     M = binNum[3:]
     str_M = "".join(M)
-    str_M = "1"+str_M # significand
+    str_M = "1"+str_M
 
-    e = bin(decimalConverter(e))[2:]
-    new = decimalConverter(M[: -(len(e))])
+    e = bin(binaryToInteger(e))[2:]
+    new = binaryToInteger(M[: -(len(e))])
 
     e = list(e)
     e1 = []
@@ -129,12 +142,12 @@ def FloatConversion(binNum: str):
     return ans
 
 
-def resetFlag(): 
+def resetFlag(): # !!!!!!!!!!!!!!! PLS EXPLAIN THE PURPOSE OF THIS !!!!!!!!!!!!!!!!
     R["111"] = 0
 
 
-def findOpcodeType(op_bin):  # takes the opcodeode in binary
-    return opcodeStack[op_bin]
+def findOpcodeType(op_bin):  # takes the opcode in binary
+    return opc[op_bin]
 
 
 def movImm(reg1, imm):  # assuming immediate is already a decimal here
@@ -262,14 +275,15 @@ def compare(r1, r2):
 
 
 def load(r1, mem):
-    R[r1] = decimalConverter(mem_stack[decimalConverter(mem)])
+    R[r1] = binaryToInteger(memFile.mem[binaryToInteger(mem)])
     resetFlag()
     dump()
 
 
 def store(r1, mem):
-    
-    mem_stack[decimalConverter(mem)] = binaryConverter(R[r1], 16)
+    print(mem)
+    print(binaryToInteger(mem))
+    memFile.mem[binaryToInteger(mem)] = integerToBinary(R[r1], 16)
     resetFlag()
     dump()
 
@@ -278,7 +292,7 @@ def jmp(mem):
     resetFlag()
     dump()
     global PC
-    PC = decimalConverter(mem)
+    PC = binaryToInteger(mem)
 
 
 def jgt(line):
@@ -286,20 +300,21 @@ def jgt(line):
     if R["111"] == 2:
         resetFlag()
         dump()
-        PC = decimalConverter(line)
+        PC = binaryToInteger(line)
     else:
         resetFlag()
         dump()
         PC += 1
+
 
 def float_add(r1, r2, r3):
     # add floating point r2 and r3 and store in r1
     dec_r2 = FloatConversion(R[r2])
     dec_r3 = FloatConversion(R[r3])
     R[r1] = dec_r2 + dec_r3
-    if FloatConversion(R[r2])+FloatConversion(R[r3]) > 15.75:
+    if FloatConversion(R[r2])+FloatConversion(R[r3]) > 252.0:
         R["111"] = 8
-        R[r1] = 15.75
+        R[r1] = 252.0
         dump()
     else:
         resetFlag()
@@ -315,7 +330,7 @@ def float_sub(r1, r2, r3):
         R["111"] = 8
 
         R[r1] = 0
-        
+
         dump()
     else:
         resetFlag()
@@ -333,7 +348,7 @@ def je(line):
     if R["111"] == 1:
         resetFlag()
         dump()
-        PC = decimalConverter(line)
+        PC = binaryToInteger(line)
     else:
         resetFlag()
         dump()
@@ -345,7 +360,7 @@ def jlt(line):
     if R["111"] == 4:
         resetFlag()
         dump()
-        PC = decimalConverter(line)
+        PC = binaryToInteger(line)
     else:
         resetFlag()
         dump()
@@ -353,15 +368,16 @@ def jlt(line):
 
 
 def dump():
-    # print(binaryConverter(int(PC), 7), end=" ")
-    sys.stdout.write(binaryConverter(int(PC), 7))
-    sys.stdout.write("        ")
-    
+    # print(integerToBinary(int(PC), 7), end=" ")
+    f2.write(integerToBinary(int(PC), 7))
+    f2.write(" ")
+
     for reg in R:
-        # print(binaryConverter(int(R[reg]), 16), end=" ")
-        sys.stdout.write(binaryConverter(int(R[reg]), 16))
-        sys.stdout.write(" ")
-    sys.stdout.write("\n")
+        # print(integerToBinary(int(R[reg]), 16), end=" ")
+
+        f2.write(integerToBinary(int(R[reg]), 16))
+        f2.write(" ")
+    f2.write("\n")
 
 
 lines = []
@@ -372,7 +388,7 @@ while hltFlag != 1:
     if count > 100000:
         break
     Cycle += 1
-    line = mem_stack[PC]
+    line = memFile.getInst(PC)
     opcode = line[0:5]
     opcodeType = findOpcodeType(opcode)
 
@@ -411,14 +427,14 @@ while hltFlag != 1:
 
         elif opcode == "10001":
             float_sub(reg1, reg2, reg3)
-          
+
 
     elif opcodeType == "B":
         reg1 = line[6:9].strip()
         imm1 = line[9:].strip()
-        imm = decimalConverter(line[9:].strip())
+        imm = binaryToInteger(line[9:].strip())
 
-        if opcode == "00010":
+        if opcode == "10010":
             movImm(reg1, imm)
             PC += 1
 
@@ -431,8 +447,6 @@ while hltFlag != 1:
             PC += 1
 
         elif opcode == "10010":
-            reg1=line[5:8].strip()
-            imm1=line[8:].strip()
             float_mov(reg1, imm1)
 
     elif opcodeType == "C":
@@ -487,4 +501,6 @@ while hltFlag != 1:
         hltFlag = 1
         dump()
         break
-dump_memory()
+memFile.dump()
+f1.close()
+f2.close()
