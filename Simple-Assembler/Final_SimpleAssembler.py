@@ -375,12 +375,14 @@ def make_8bit_binary_float(floatNumStr: str):
             return False
 
     if not isFloatValid(floatNumStr):
-        print("Invalid float.")
+        sys.stdout.write("Invalid float")
+        
         exit()
 
     floatNum = float(floatNumStr)
     if floatNum < 1:
-        print("Invalid float. Cannot be represented since it is less than 1.")
+        sys.stdout.write("Invalid float. Cannot be represented since it is less than 1.")
+        
         exit()
 
     integerPart = int(floatNum)
@@ -409,7 +411,7 @@ def make_8bit_binary_float(floatNumStr: str):
     exponent = len(str(binaryIntPart))
 
     if exponent > 7:
-        print("Exponent > 7. Overflow.")
+        sys.stdout.write("Exponent > 7. Overflow.")
         exit()
 
     exponent = bin(exponent - 1)[2:].zfill(3)

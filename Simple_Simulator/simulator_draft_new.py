@@ -148,10 +148,6 @@ def resetFlag(): # !!!!!!!!!!!!!!! PLS EXPLAIN THE PURPOSE OF THIS !!!!!!!!!!!!!
     R["111"] = 0
 
 
-def findOpcodeType(op_bin):  # takes the opcodeode in binary
-    return opcodeStack[op_bin]
-
-
 def movImm(reg1, imm):  # assuming immediate is already a decimal here
     R[reg1] = imm
     resetFlag()
@@ -377,6 +373,7 @@ def dump():
         
         f2.write(binaryConverter(int(R[reg]), 16))
         f2.write(" ")
+    
     f2.write("\n")
 
 
@@ -390,7 +387,7 @@ while hltFlag != 1:
     
     line = mem_stack[PC]
     opcode = line[0:5]
-    opcodeType = findOpcodeType(opcode)
+    opcodeType = opcodeStack[opcode]
 
     if opcodeType == "A":
         reg1 = line[7:10].strip()
@@ -419,8 +416,6 @@ while hltFlag != 1:
         elif opcode == "01100":
             AND(reg1, reg2, reg3)
             
-
-
         elif opcode == "10000":
             float_add(reg1, reg2, reg3)
 
@@ -498,7 +493,7 @@ while hltFlag != 1:
         elif opcode == "11111":
             je(memAddr)
 
-    elif opcodeType == "F":
+    else:
         hltFlag = 1
         dump()
         break
