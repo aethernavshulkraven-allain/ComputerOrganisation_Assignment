@@ -351,6 +351,76 @@ def make_7bit_binary(num):
         bin = "0" * (7 - len(bin)) + bin
     return bin
 
+def isFloatValid(immStr: str):
+    immList = list(immStr)
+    if immList[0] == "$":
+        try:
+            immFloat = float("".join(immList[1:]))
+            if type(immFloat) == float:
+                # Add additional conditions for range check
+                # Example: if immFloat >= lower_bound and immFloat <= upper_bound:
+                return True
+        except ValueError:
+            print("Invalid immediate.")
+            return False
+    return False
+
+
+def make_8bit_binary_float(floatNumStr: str):
+    def isFloatValid(floatStr):
+        try:
+            float(floatStr)
+            return True
+        except ValueError:
+            return False
+
+    if not isFloatValid(floatNumStr):
+        print("Invalid float.")
+        exit()
+
+    floatNum = float(floatNumStr)
+    if floatNum < 1:
+        print("Invalid float. Cannot be represented since it is less than 1.")
+        exit()
+
+    integerPart = int(floatNum)
+    fractionalPart = floatNum - integerPart
+    binaryIntPart = bin(integerPart)[2:]
+    mantissa = list(str(binaryIntPart))
+
+    fractionalBits = []
+    while len(mantissa) != 5:
+        fractionalPart *= 2
+
+        if fractionalPart > 1:
+            fractionalBits.append(str(1))
+            fractionalPart -= 1
+        elif fractionalPart < 1:
+            fractionalBits.append(str(0))
+        elif fractionalPart == 1:
+            fractionalBits.append(str(1))
+            break
+
+    mantissa = mantissa[1:] + fractionalBits
+
+    if len(mantissa) > 5:
+        mantissa = mantissa[:5]
+
+    exponent = len(str(binaryIntPart))
+
+    if exponent > 7:
+        print("Exponent > 7. Overflow.")
+        exit()
+
+    exponent = bin(exponent - 1)[2:].zfill(3)
+
+    while len(mantissa) < 5:
+        mantissa.append("0")
+
+    mantissa = "".join(mantissa)
+    return exponent + mantissa
+
+
 
 
 def typeA(cmd): #the same list given to "assembleOut" is given here
