@@ -5,8 +5,9 @@ import sys
 # Register File (RF): The RF takes in the register name (R0, R1, ... R6 or FLAGS) and
 # returns the value stored at that register.
 # here R is the RF
-f1 = open("Simple_Simulator/input.txt","r")
-f2 = open("Simple_Simulator/output.txt","w")
+#f1 = open("Simple_Simulator/input.txt","r")
+#f2 = open("Simple_Simulator/output.txt","w")
+
 R = {
     "000": 0,
     "001": 0,
@@ -68,6 +69,22 @@ def binaryConverter(num, bitSize): #integer to binary
     return bin
 
 
+# ************************ BHAI YE CHAHIYE Q2 KE LIYE?, PLS CONFIRM!   NAHII NAHII Q3 KE LIYE ***************************
+
+def floatValidity(imm: str):
+    imm = list(imm)
+    if imm[0] == "$":
+        try:
+            imm = float("".join(imm[1:]))
+            if (
+                type(imm) == float
+            ):  # ADD and imm in range(), the range of M and exponent
+                return True
+        except ValueError:
+            print("Invalid immediate.")
+            return False
+    return False
+
 # *************************** MEM *****************************
 
 # Memory (MEM): MEM takes in an 7 bit address and returns a 16 bit value as the data.
@@ -76,8 +93,11 @@ def binaryConverter(num, bitSize): #integer to binary
 TOT_SIZE = 128
 mem_stack = ["0000000000000000"] * TOT_SIZE
 
-def fileReader(inputFile):
-    assembleOut=inputFile.readlines()
+
+def fileReader():
+    assembleOut = []
+    for kx in sys.stdin:
+        assembleOut.append(kx)
     i=0
     for line in assembleOut:
         mem_stack[i] = line.rstrip("\n")
@@ -85,18 +105,17 @@ def fileReader(inputFile):
 
 def dump_memory():
     for Address in mem_stack:
-        f2.write(Address+'\n')
-
+        sys.stdout.write(Address+'\n')
 
 PC = 0 #Program Counter (PC): The PC is an 7 bit register which points to the current instruction.
+Cycle = 0
+Cycle = -1
 temp = []
+
 hltFlag = 0
 
-
-fileReader(f1)
-print("REACHED")
-
-
+fileReader()
+#print("REACHED")
 
 # ******************************** EE *******************************
 
@@ -126,8 +145,12 @@ def FloatConversion(binNum: str):
     return ans
 
 
-def resetFlag(): 
+def resetFlag(): # !!!!!!!!!!!!!!! PLS EXPLAIN THE PURPOSE OF THIS !!!!!!!!!!!!!!!!
     R["111"] = 0
+
+
+def findOpcodeType(op_bin):  # takes the opcodeode in binary
+    return opcodeStack[op_bin]
 
 
 def movImm(reg1, imm):  # assuming immediate is already a decimal here
@@ -347,16 +370,14 @@ def jlt(line):
 
 def dump():
     # print(binaryConverter(int(PC), 7), end=" ")
-    f2.write(binaryConverter(int(PC), 7))
-    f2.write("        ")
+    sys.stdout.write(binaryConverter(int(PC), 7))
+    sys.stdout.write("        ")
     
     for reg in R:
         # print(binaryConverter(int(R[reg]), 16), end=" ")
-        
-        f2.write(binaryConverter(int(R[reg]), 16))
-        f2.write(" ")
-    
-    f2.write("\n")
+        sys.stdout.write(binaryConverter(int(R[reg]), 16))
+        sys.stdout.write(" ")
+    sys.stdout.write("\n")
 
 
 lines = []
@@ -364,12 +385,12 @@ lines = []
 count = 0
 while hltFlag != 1:
     count += 1
-    if count > 128:
+    if count > 100000:
         break
-    
+    Cycle += 1
     line = mem_stack[PC]
     opcode = line[0:5]
-    opcodeType = opcodeStack[opcode]
+    opcodeType = findOpcodeType(opcode)
 
     if opcodeType == "A":
         reg1 = line[7:10].strip()
@@ -378,32 +399,35 @@ while hltFlag != 1:
 
         if opcode == "00000":
             add(reg1, reg2, reg3)
-            
+            PC += 1
 
         elif opcode == "00001":
             sub(reg1, reg2, reg3)
-            
+            PC += 1
 
         elif opcode == "00010":
             mul(reg1, reg2, reg3)
-            
+            PC += 1
 
         elif opcode == "01010":
             xor(reg1, reg2, reg3)
-            
+            PC += 1
 
         elif opcode == "01011":
             OR(reg1, reg2, reg3)
-            
+            PC += 1
+
         elif opcode == "01100":
             AND(reg1, reg2, reg3)
-            
+            PC += 1
+
+
         elif opcode == "10000":
             float_add(reg1, reg2, reg3)
 
         elif opcode == "10001":
             float_sub(reg1, reg2, reg3)
-        PC+=1
+          
 
     elif opcodeType == "B":
         reg1 = line[6:9].strip()
@@ -412,41 +436,41 @@ while hltFlag != 1:
 
         if opcode == "00010":
             movImm(reg1, imm)
+            PC += 1
 
-            
         elif opcode == "01001":
             lShift(reg1, imm)
-            
+            PC += 1
 
         elif opcode == "01000":
             rShift(reg1, imm)
-            
+            PC += 1
 
         elif opcode == "10010":
             reg1=line[5:8].strip()
             imm1=line[8:].strip()
             float_mov(reg1, imm1)
-        PC+=1
+
     elif opcodeType == "C":
         reg1 = line[10:13].strip()
         reg2 = line[13:].strip()
 
         if opcode == "00011":
             movReg(reg1, reg2)
-            
+            PC += 1
 
         elif opcode == "00111":
             divide(reg1, reg2)
-            
+            PC += 1
 
         elif opcode == "01101":
             invert(reg1, reg2)
-            
+            PC += 1
 
         elif opcode == "01110":
             compare(reg1, reg2)
-            
-        PC+=1
+            PC += 1
+
     elif opcodeType == "D":
         reg1 = line[6:9].strip()
 
@@ -454,12 +478,12 @@ while hltFlag != 1:
 
         if opcode == "00100":
             load(reg1, memAddr)
-            
+            PC += 1
 
         elif opcode == "00101":
             store(reg1, memAddr)
-            
-        PC+=1
+            PC += 1
+
     elif opcodeType == "E":
         memAddr = line[9:].strip()
 
@@ -475,10 +499,8 @@ while hltFlag != 1:
         elif opcode == "11111":
             je(memAddr)
 
-    else:
+    elif opcodeType == "F":
         hltFlag = 1
         dump()
         break
 dump_memory()
-f1.close()
-f2.close()
