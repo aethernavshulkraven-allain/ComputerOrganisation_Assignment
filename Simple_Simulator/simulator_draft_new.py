@@ -89,9 +89,7 @@ def dump_memory():
 
 
 PC = 0 #Program Counter (PC): The PC is an 7 bit register which points to the current instruction.
-
 temp = []
-
 hltFlag = 0
 
 
