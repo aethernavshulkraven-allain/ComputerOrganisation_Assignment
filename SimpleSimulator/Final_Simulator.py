@@ -501,6 +501,7 @@ while hltFlag != 1:
 
     elif opcodeType == "F":
         hltFlag = 1
+        resetFlag()
         dump()
         break
 dump_memory()
