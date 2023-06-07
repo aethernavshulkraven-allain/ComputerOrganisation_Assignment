@@ -105,8 +105,7 @@ def dump_memory():
 
 
 PC = 0 #Program Counter (PC): The PC is an 7 bit register which points to the current instruction.
-Cycle = 0
-Cycle = -1
+
 temp = []
 
 hltFlag = 0
@@ -386,9 +385,9 @@ lines = []
 count = 0
 while hltFlag != 1:
     count += 1
-    if count > 100000:
+    if count > 128:
         break
-    Cycle += 1
+    
     line = mem_stack[PC]
     opcode = line[0:5]
     opcodeType = findOpcodeType(opcode)
@@ -400,27 +399,26 @@ while hltFlag != 1:
 
         if opcode == "00000":
             add(reg1, reg2, reg3)
-            PC += 1
+            
 
         elif opcode == "00001":
             sub(reg1, reg2, reg3)
-            PC += 1
+            
 
         elif opcode == "00010":
             mul(reg1, reg2, reg3)
-            PC += 1
+            
 
         elif opcode == "01010":
             xor(reg1, reg2, reg3)
-            PC += 1
+            
 
         elif opcode == "01011":
             OR(reg1, reg2, reg3)
-            PC += 1
-
+            
         elif opcode == "01100":
             AND(reg1, reg2, reg3)
-            PC += 1
+            
 
 
         elif opcode == "10000":
@@ -428,7 +426,7 @@ while hltFlag != 1:
 
         elif opcode == "10001":
             float_sub(reg1, reg2, reg3)
-          
+        PC+=1
 
     elif opcodeType == "B":
         reg1 = line[6:9].strip()
@@ -437,41 +435,41 @@ while hltFlag != 1:
 
         if opcode == "00010":
             movImm(reg1, imm)
-            PC += 1
 
+            
         elif opcode == "01001":
             lShift(reg1, imm)
-            PC += 1
+            
 
         elif opcode == "01000":
             rShift(reg1, imm)
-            PC += 1
+            
 
         elif opcode == "10010":
             reg1=line[5:8].strip()
             imm1=line[8:].strip()
             float_mov(reg1, imm1)
-
+        PC+=1
     elif opcodeType == "C":
         reg1 = line[10:13].strip()
         reg2 = line[13:].strip()
 
         if opcode == "00011":
             movReg(reg1, reg2)
-            PC += 1
+            
 
         elif opcode == "00111":
             divide(reg1, reg2)
-            PC += 1
+            
 
         elif opcode == "01101":
             invert(reg1, reg2)
-            PC += 1
+            
 
         elif opcode == "01110":
             compare(reg1, reg2)
-            PC += 1
-
+            
+        PC+=1
     elif opcodeType == "D":
         reg1 = line[6:9].strip()
 
@@ -479,12 +477,12 @@ while hltFlag != 1:
 
         if opcode == "00100":
             load(reg1, memAddr)
-            PC += 1
+            
 
         elif opcode == "00101":
             store(reg1, memAddr)
-            PC += 1
-
+            
+        PC+=1
     elif opcodeType == "E":
         memAddr = line[9:].strip()
 
