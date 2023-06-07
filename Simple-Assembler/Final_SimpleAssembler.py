@@ -11,8 +11,11 @@ parentstr=""
 # f1=open("machine_code_ouput.txt","w")
 opcode = {
     "add": ("00000", "A"),
+    "addf":("10000","A"),
     "sub": ("00001", "A"),
+    "subf":("10001","A"),
     "mov": [("00010", "B"), ("00011", "C")],
+    "movf":("10010","A"),
     "ld": ("00100", "D"),
     "st": ("00101", "D"),
     "mul": ("00110", "A"),
@@ -348,6 +351,8 @@ def make_7bit_binary(num):
         bin = "0" * (7 - len(bin)) + bin
     return bin
 
+
+
 def typeA(cmd): #the same list given to "assembleOut" is given here
     strout = ""
     strout += opcode[cmd[0]][0]
@@ -360,17 +365,27 @@ def typeA(cmd): #the same list given to "assembleOut" is given here
 
 def typeB(cmd): #the same list given to "assembleOut" is given here
     strout = ""
-    if cmd[0] == "mov":
-        strout += opcode[cmd[0]][0][0]
-    else:
-        strout += opcode[cmd[0]][0]
-    strout += "0"
-    r1 = registersF[cmd[1]]
-    strout += r1
-    imm = cmd[2][1:] #as 0 is $
-    immbin = make_7bit_binary(int(imm))
-    strout += immbin
-    return strout
+    if cmd[0] == "movf":
+        strout+=opcode[cmd[0]]
+        r1 = registersF[cmd[1]]
+        strout += r1
+        imm = cmd[2][1:]
+        immbin=make_8bit_binary_float(imm)
+        strout+=immbin
+        return strout
+        
+    else:        
+        if cmd[0] == "mov":
+            strout += opcode[cmd[0]][0][0]
+        else:
+            strout += opcode[cmd[0]][0]
+        strout += "0"
+        r1 = registersF[cmd[1]]
+        strout += r1
+        imm = cmd[2][1:] #as 0 is $
+        immbin = make_7bit_binary(int(imm))
+        strout += immbin
+        return strout
 
 def typeC(cmd): #the same list given to "assembleOut" is given here
     strout = ""
@@ -420,7 +435,7 @@ def typeE(cmd): #the same list given to "assembleOut" is given here
 
 def assembleOut(cmd):
     #if encountered type is A
-    typeA_ins = ["add", "sub", "mul", "xor", "or", "and"]
+    typeA_ins = ["add", "sub", "mul", "xor", "or", "and","addf"]
     if (cmd[0] in typeA_ins): return typeA(cmd)
 
     #if encountered type is B
