@@ -68,22 +68,6 @@ def binaryConverter(num, bitSize): #integer to binary
     return bin
 
 
-# ************************ BHAI YE CHAHIYE Q2 KE LIYE?, PLS CONFIRM!   NAHII NAHII Q3 KE LIYE ***************************
-
-def floatValidity(imm: str):
-    imm = list(imm)
-    if imm[0] == "$":
-        try:
-            imm = float("".join(imm[1:]))
-            if (
-                type(imm) == float
-            ):  # ADD and imm in range(), the range of M and exponent
-                return True
-        except ValueError:
-            print("Invalid immediate.")
-            return False
-    return False
-
 # *************************** MEM *****************************
 
 # Memory (MEM): MEM takes in an 7 bit address and returns a 16 bit value as the data.
@@ -144,7 +128,7 @@ def FloatConversion(binNum: str):
     return ans
 
 
-def resetFlag(): # !!!!!!!!!!!!!!! PLS EXPLAIN THE PURPOSE OF THIS !!!!!!!!!!!!!!!!
+def resetFlag(): 
     R["111"] = 0
 
 
