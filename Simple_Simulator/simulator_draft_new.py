@@ -284,8 +284,7 @@ def load(r1, mem):
 
 
 def store(r1, mem):
-    print(mem)
-    print(decimalConverter(mem))
+    
     mem_stack[decimalConverter(mem)] = binaryConverter(R[r1], 16)
     resetFlag()
     dump()
@@ -372,7 +371,7 @@ def jlt(line):
 def dump():
     # print(binaryConverter(int(PC), 7), end=" ")
     f2.write(binaryConverter(int(PC), 7))
-    f2.write(" ")
+    f2.write("        ")
     
     for reg in R:
         # print(binaryConverter(int(R[reg]), 16), end=" ")
@@ -425,16 +424,16 @@ while hltFlag != 1:
 
 
         elif opcode == "10000":
-            addf(reg1, reg2, reg3)
+            float_add(reg1, reg2, reg3)
 
         elif opcode == "10001":
-            subf(reg1, reg2, reg3)
+            float_sub(reg1, reg2, reg3)
           
 
     elif opcodeType == "B":
-        reg1 = line[5:8].strip()
-        imm1 = line[8:].strip()
-        imm = decimalConverter(line[8:].strip())
+        reg1 = line[6:9].strip()
+        imm1 = line[9:].strip()
+        imm = decimalConverter(line[9:].strip())
 
         if opcode == "00010":
             movImm(reg1, imm)
@@ -449,7 +448,9 @@ while hltFlag != 1:
             PC += 1
 
         elif opcode == "10010":
-            movf(reg1, imm1)
+            reg1=line[5:8].strip()
+            imm1=line[8:].strip()
+            float_mov(reg1, imm1)
 
     elif opcodeType == "C":
         reg1 = line[10:13].strip()
