@@ -218,9 +218,9 @@ def isLineValid(line: str):
     else:
         return False
 
-# f=open("input_file.txt","r")
+f=open("Simple-Assembler/input.txt","r")
 # cmd_list = f.readlines()
-for kx in sys.stdin:
+for kx in f.readlines():
     cmd_list.append(kx)
 org_cmd_list = [line.strip() for line in cmd_list]
 cmd_list = [line for line in org_cmd_list if line != ""]
