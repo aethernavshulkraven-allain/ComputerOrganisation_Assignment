@@ -5,31 +5,32 @@ import os
 
 class AsmGrader(Grader):
 
-	SIMPLE_MARKS = 2
-	HARD_MARKS = 5
+	SIMPLE_MARKS = 0.5
+	HARD_MARKS = 1.5
 
 	ASM_ERROR_DIR = "errorGen"
 	ASM_HARD_DIR = "hardBin"
 	ASM_SIMPLE_DIR = "simpleBin"
 
-	BIN_HARD_DIR = "bin_h"
-	BIN_SIMPLE_DIR = "bin_s"
+	BIN_HARD_DIR = "hard"
+	BIN_SIMPLE_DIR = "simple"
 
 	ASM_RUN_DIR = "../Simple-Assembler/"
 
 	def __init__(self, verb, enable):
 		super().__init__(verb, enable)
-		self.enable = enable 
+		self.enable = enable
 
 	def handleErrorGen(self):
 	
-		curDir = os.getcwd() 
-		tests = self.listFiles("tests/assembly/" + self.ASM_ERROR_DIR) 
-		os.chdir(self.ASM_RUN_DIR)  
+		curDir = os.getcwd()
+		tests = self.listFiles("tests/assembly/" + self.ASM_ERROR_DIR)
+		tests.sort()
+		os.chdir(self.ASM_RUN_DIR)
 		
 		for test in tests:
 			self.printSev(self.HIGH, bcolors.OKCYAN + "Running " + test + bcolors.ENDC)
-			errors = os.popen("./run < " + "../automatedTesting/tests/assembly/" + self.ASM_ERROR_DIR + "/" + test).read() 
+			errors = os.popen("./run < " + "../automatedTesting/tests/assembly/" + self.ASM_ERROR_DIR + "/" + test).read()
 			self.printSev(self.HIGH, errors, end="")
 			self.printSev(self.HIGH, "============================================\n")
 
@@ -46,8 +47,8 @@ class AsmGrader(Grader):
 		os.chdir(self.ASM_RUN_DIR)
 		
 		for test in tests:
-			generatedBin = os.popen("./run < " + "../automatedTesting/tests/assembly/" + genDir + "/" + test).readlines() 
-			expectedBin = os.popen("cat " + "../automatedTesting/tests/assembly/" + expDir + "/" + test).readlines() 
+			generatedBin = os.popen("./run < " + "../automatedTesting/tests/assembly/" + genDir + "/" + test).readlines()
+			expectedBin = os.popen("cat " + "../automatedTesting/tests/bin/" + expDir + "/" + test).readlines()
 
 			if self.diff(generatedBin, expectedBin):
 				self.printSev(self.HIGH, bcolors.OKGREEN + "[PASSED]" + bcolors.ENDC + " " + test)
@@ -58,7 +59,6 @@ class AsmGrader(Grader):
 
 		os.chdir(curDir)
 		return passCount, totalCount
-	
 	
 	def grade(self):
 		res = None
@@ -75,8 +75,7 @@ class AsmGrader(Grader):
 			hardPass, hardTotal = self.handleBin(self.ASM_HARD_DIR, self.BIN_HARD_DIR)
 			
 			self.printSev(self.HIGH, bcolors.OKBLUE + bcolors.BOLD + "Running error tests" + bcolors.ENDC)
-			self.handleErrorGen()  
-
+			self.handleErrorGen()
 			res = [
 					["Simple", simplePass, simpleTotal, self.SIMPLE_MARKS],
 					["Hard", hardPass, hardTotal, self.HARD_MARKS],

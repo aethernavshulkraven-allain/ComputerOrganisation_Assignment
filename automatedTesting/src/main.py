@@ -43,7 +43,6 @@ def main():
 
 	res = Results(VERBOSE, asmRes, simRes)
 	res.declare()
-	
 
 if __name__ == '__main__':
 	main()
