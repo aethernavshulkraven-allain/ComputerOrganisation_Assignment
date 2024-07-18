@@ -69,7 +69,6 @@ def binaryConverter(num, bitSize): #integer to binary
     return bin
 
 
-# ************************ BHAI YE CHAHIYE Q2 KE LIYE?, PLS CONFIRM!   NAHII NAHII Q3 KE LIYE ***************************
 
 def floatValidity(imm: str):
     imm = list(imm)
@@ -145,7 +144,7 @@ def FloatConversion(binNum: str):
     return ans
 
 
-def resetFlag(): # !!!!!!!!!!!!!!! PLS EXPLAIN THE PURPOSE OF THIS !!!!!!!!!!!!!!!!
+def resetFlag(): 
     R["111"] = 0
 
 
